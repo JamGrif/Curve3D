@@ -289,14 +289,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\textures\jeff.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\icon\Icon.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="res\shaders\lightingPassTwo-vertex.glsl" />
     <None Include="res\shaders\lightingPassTwo-fragment.glsl" />
     <None Include="res\shaders\lightingPassOne-vertex.glsl" />

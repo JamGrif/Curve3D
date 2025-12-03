@@ -78,12 +78,14 @@
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(ProjectName)\intermediates\$(Platform)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)dependencies\tinyXML\src;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)bin\$(ProjectName)\intermediates\$(Platform)\$(Configuration)\</IntDir>
     <LibraryPath>$(SolutionDir)dependencies\tinyXML\src;$(LibraryPath)</LibraryPath>
+    <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -334,7 +336,6 @@ xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S
     <ClInclude Include="include\UI\SceneModelsPanel.h" />
     <ClInclude Include="include\UI\PerformancePanel.h" />
     <ClInclude Include="include\UI\ModelDataPanel.h" />
-    <ClInclude Include="res\icon\resource.h" />
     <ClInclude Include="include\Scene\SceneLightManager.h" />
     <ClInclude Include="include\Core\Application.h" />
     <ClInclude Include="include\Scene\Scene.h" />
@@ -349,10 +350,7 @@ xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S
     <ClInclude Include="include\UI\OptionsPanel.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="res\icon\Icon.ico" />
-    <Image Include="res\textures\jeff.jpg" />
-  </ItemGroup>
-  <ItemGroup>
+    <None Include="config\imguiconfig.ini" />
     <None Include="res\shaders\basic-fragment.glsl" />
     <None Include="res\shaders\basic-vertex.glsl" />
     <None Include="res\shaders\blendingSprite-fragment.glsl" />
