@@ -31,6 +31,8 @@ namespace Engine
 
 	bool StartEngine()
 	{
+		//sceneToLoad = initialScene;
+
 		if (ENGINE_STARTED)
 			return false;
 
@@ -77,7 +79,6 @@ namespace Engine
 	/// </summary>
 	bool EngineMain::Initialise(const std::string& text)
 	{
-
 		// Initialize all systems used by application
 		Log::Init();
 
@@ -91,21 +92,8 @@ namespace Engine
 
 		m_UI = new UI(false, &m_loadedScene);
 
-		if (text.empty())
-		{
-			// Create Scene object and set initial scene
-			if (!SetScene("materialTest"))
-				return false;
-		}
-		else
-		{
-			// Create Scene object and set initial scene
-			if (!SetScene(text))
-				return false;
-		}
-
-
-		
+		if (!SetScene(text))
+			return false;
 
 		return true;
 	}

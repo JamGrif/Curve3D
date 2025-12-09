@@ -14,9 +14,9 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{e5b7b8ff-f036-422d-be02-5a18a36e92c9}</ProjectGuid>
-    <RootNamespace>Engine</RootNamespace>
+    <RootNamespace>Curve3D</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>Engine</ProjectName>
+    <ProjectName>Curve3D</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -129,7 +129,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;JG_DEBUG;_SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\include\Engine;$(SolutionDir)Engine\dependencies\GLFW\include;$(SolutionDir)Engine\dependencies\GLEW\include;$(SolutionDir)Engine\dependencies\glm\include;$(SolutionDir)Engine\dependencies\stb_image\include;$(SolutionDir)Engine\dependencies\assimp\include;$(SolutionDir)Engine\dependencies\imgui;$(SolutionDir)Engine\dependencies\spdlog\include;$(SolutionDir)Engine\dependencies\tinyXML\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Curve3D\include\Curve3D;$(SolutionDir)Curve3D\dependencies\GLFW\include;$(SolutionDir)Curve3D\dependencies\GLEW\include;$(SolutionDir)Curve3D\dependencies\glm\include;$(SolutionDir)Curve3D\dependencies\stb_image\include;$(SolutionDir)Curve3D\dependencies\assimp\include;$(SolutionDir)Curve3D\dependencies\imgui;$(SolutionDir)Curve3D\dependencies\spdlog\include;$(SolutionDir)Curve3D\dependencies\tinyXML\include</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -138,15 +138,15 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Engine\dependencies\GLFW\lib\debug;$(SolutionDir)Engine\dependencies\GLEW\lib\debug;$(SolutionDir)Engine\dependencies\assimp\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Curve3D\dependencies\GLFW\lib\debug;$(SolutionDir)Curve3D\dependencies\GLEW\lib\debug;$(SolutionDir)Curve3D\dependencies\assimp\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;glew32sd.lib;opengl32.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d $(SolutionDir)Engine\dependencies\assimp\lib\debug\assimp-vc143-mtd.dll $(TargetDir)
+      <Command>xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\debug\assimp-vc143-mtd.dll $(TargetDir)
 mkdir $(TargetDir)res 
-xcopy /y /d $(SolutionDir)Engine\res $(TargetDir)res /S
+xcopy /y /d $(SolutionDir)Curve3D\res $(TargetDir)res /S
 mkdir $(TargetDir)config
-xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S</Command>
+xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(TargetDir)config /S</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -157,7 +157,7 @@ xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S</C
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_CRT_SECURE_NO_WARNINGS;BT_THREADSAFE=1;BT_USE_DOUBLE_PRECISION;JG_RELEASE</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Engine\include\Engine;$(SolutionDir)Engine\dependencies\GLFW\include;$(SolutionDir)Engine\dependencies\GLEW\include;$(SolutionDir)Engine\dependencies\glm\include;$(SolutionDir)Engine\dependencies\stb_image\include;$(SolutionDir)Engine\dependencies\assimp\include;$(SolutionDir)Engine\dependencies\imgui;$(SolutionDir)Engine\dependencies\spdlog\include;$(SolutionDir)Engine\dependencies\tinyXML\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Curve3D\include\Curve3D;$(SolutionDir)Curve3D\dependencies\GLFW\include;$(SolutionDir)Curve3D\dependencies\GLEW\include;$(SolutionDir)Curve3D\dependencies\glm\include;$(SolutionDir)Curve3D\dependencies\stb_image\include;$(SolutionDir)Curve3D\dependencies\assimp\include;$(SolutionDir)Curve3D\dependencies\imgui;$(SolutionDir)Curve3D\dependencies\spdlog\include;$(SolutionDir)Curve3D\dependencies\tinyXML\include</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -170,15 +170,15 @@ xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S</C
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)Engine\dependencies\GLFW\lib\release;$(SolutionDir)Engine\dependencies\GLEW\lib\release;$(SolutionDir)Engine\dependencies\assimp\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)Curve3D\dependencies\GLFW\lib\release;$(SolutionDir)Curve3D\dependencies\GLEW\lib\release;$(SolutionDir)Curve3D\dependencies\assimp\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d $(SolutionDir)Engine\dependencies\assimp\lib\release\assimp-vc143-mt.dll $(TargetDir)
+      <Command>xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-mt.dll $(TargetDir)
 mkdir $(TargetDir)res 
-xcopy /y /d $(SolutionDir)Engine\res $(TargetDir)res /S
+xcopy /y /d $(SolutionDir)Curve3D\res $(TargetDir)res /S
 mkdir $(TargetDir)config
-xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S
+xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(TargetDir)config /S
 
 </Command>
     </PostBuildEvent>
@@ -273,6 +273,38 @@ xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S
     <ClCompile Include="src\Core\Vector3D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Curve3D\Core\CommonFwd.h" />
+    <ClInclude Include="include\Curve3D\Core\Engine.h" />
+    <ClInclude Include="include\Curve3D\Core\EngineClock.h" />
+    <ClInclude Include="include\Curve3D\Core\InputHandler.h" />
+    <ClInclude Include="include\Curve3D\Core\Log.h" />
+    <ClInclude Include="include\Curve3D\Core\UI.h" />
+    <ClInclude Include="include\Curve3D\Core\Vector3D.h" />
+    <ClInclude Include="include\Curve3D\pch.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Material.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Model.h" />
+    <ClInclude Include="include\Curve3D\Rendering\OpenGLErrorCheck.h" />
+    <ClInclude Include="include\Curve3D\Rendering\OpenGLFramebuffer.h" />
+    <ClInclude Include="include\Curve3D\Rendering\OpenGLRenderer.h" />
+    <ClInclude Include="include\Curve3D\Rendering\OpenGLWindow.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Resource\Cubemap.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Resource\IResource.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Resource\Manager\MaterialManager.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Resource\Manager\ResourceManager.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Resource\Mesh.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Resource\Shader.h" />
+    <ClInclude Include="include\Curve3D\Rendering\Resource\Texture.h" />
+    <ClInclude Include="include\Curve3D\Scene\Scene.h" />
+    <ClInclude Include="include\Curve3D\Scene\SceneCamera.h" />
+    <ClInclude Include="include\Curve3D\Scene\SceneLightManager.h" />
+    <ClInclude Include="include\Curve3D\Scene\SceneParser.h" />
+    <ClInclude Include="include\Curve3D\Scene\SceneSky.h" />
+    <ClInclude Include="include\Curve3D\UI\ControlPanel.h" />
+    <ClInclude Include="include\Curve3D\UI\IPanel.h" />
+    <ClInclude Include="include\Curve3D\UI\ModelDataPanel.h" />
+    <ClInclude Include="include\Curve3D\UI\OptionsPanel.h" />
+    <ClInclude Include="include\Curve3D\UI\PerformancePanel.h" />
+    <ClInclude Include="include\Curve3D\UI\SceneModelsPanel.h" />
     <ClInclude Include="include\Engine\Core\Engine.h" />
     <ClInclude Include="include\Engine\Core\EngineClock.h" />
     <ClInclude Include="include\Engine\Core\CommonFwd.h" />
@@ -383,7 +415,7 @@ xcopy /y /d $(SolutionDir)Engine\config\imguiconfig.ini $(TargetDir)config /S
     <Xml Include="res\scenes\testingreallycoolscene.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Engine.rc" />
+    <ResourceCompile Include="Curve3D.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="res\icon\Icon.ico" />

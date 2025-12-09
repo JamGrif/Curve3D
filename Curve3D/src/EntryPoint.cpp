@@ -11,7 +11,6 @@
 	#define KeepConsoleOpen() 
 #endif
 
-
 int wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR pCmdLine, _In_ int nCmdShow)
 {
 	// Convert PWSTR argument list into std::string
@@ -23,7 +22,7 @@ int wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LP
 	
 	if (processArgument.empty())
 	{
-		MessageBoxA(NULL, "Engine must be started from Launcher!", "ERROR - :(", MB_OK | MB_ICONASTERISK);
+		MessageBoxA(NULL, "Curve3D must be started from Curve3DLauncher!", "ERROR - :(", MB_OK | MB_ICONASTERISK);
 		return 1;
 	}
 

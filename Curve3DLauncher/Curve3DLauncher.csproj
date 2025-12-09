@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <BaseOutputPath>C:\Users\jamgr\Desktop\Stuff\dev\Projects\OpenGLProjectTwo\bin\Launcher\x64</BaseOutputPath>
+    <BaseOutputPath>C:\Users\jamgr\Desktop\Stuff\dev\Projects\Curve3D\bin\Curve3DLauncher\x64</BaseOutputPath>
     <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
     <Title></Title>
     <PlatformTarget>x64</PlatformTarget>
@@ -62,7 +62,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y /d $(SolutionDir)bin\Engine\x64\$(ConfigurationName) $(TargetDir) /S" />
+    <Exec Command="xcopy /y /d $(SolutionDir)bin\Curve3D\x64\$(ConfigurationName) $(TargetDir) /S" />
   </Target>
 
 </Project>

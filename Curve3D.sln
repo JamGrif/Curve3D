@@ -1,14 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11222.15 d18.0
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Launcher", "Launcher\Launcher.csproj", "{4FE59383-7662-41BC-871C-65431C34D692}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Curve3DLauncher", "Curve3DLauncher\Curve3DLauncher.csproj", "{4FE59383-7662-41BC-871C-65431C34D692}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E5B7B8FF-F036-422D-BE02-5A18A36E92C9} = {E5B7B8FF-F036-422D-BE02-5A18A36E92C9}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Engine", "Engine\Engine.vcxproj", "{E5B7B8FF-F036-422D-BE02-5A18A36E92C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Curve3D", "Curve3D\Curve3D.vcxproj", "{E5B7B8FF-F036-422D-BE02-5A18A36E92C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

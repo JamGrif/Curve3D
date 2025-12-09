@@ -68,7 +68,7 @@ namespace Launcher
         {
             Process? demoProcess = Process.Start(new ProcessStartInfo()
             {
-                FileName = "Engine.exe",
+                FileName = "Curve3D.exe",
                 RedirectStandardOutput = false,
                 UseShellExecute = false,
                 ArgumentList = { startSceneName },

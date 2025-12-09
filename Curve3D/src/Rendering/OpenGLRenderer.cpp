@@ -38,7 +38,7 @@ bool OpenGLRenderer::Init()
 		return false;
 	}
 
-	TheOpenGLWindow::Get()->Init(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "OpenGL - Jamie", false);
+	TheOpenGLWindow::Get()->Init(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "Curve3D Window", false);
 
 	// GLEW
 	glewExperimental = GL_TRUE;
