@@ -59,5 +59,15 @@ namespace Curve3DLauncher.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] Curve3D_Logo2 {
+            get {
+                object obj = ResourceManager.GetObject("Curve3D_Logo2", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
