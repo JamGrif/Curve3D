@@ -6,8 +6,8 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <BaseOutputPath>$(SolutionDir)\bin\$(Configuration)\Curve3DLauncher</BaseOutputPath>
-    <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
+    <OutputPath>$(SolutionDir)\bin\$(Configuration)\Curve3DLauncher</OutputPath>
+    <IntermediateOutputPath>$(SolutionDir)\bin\$(Configuration)\intermediates</IntermediateOutputPath>
     <Title></Title>
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
@@ -21,7 +21,6 @@
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    
-	<OutputPath>$(SolutionDir)\bin\$(Configuration)\Curve3DLauncher</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -73,7 +72,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y /d $(TargetDir) $(SolutionDir)bin\$(Configuration)\final /S" />
+    <Exec Command="xcopy /y /d $(TargetDir) $(SolutionDir)bin\$(Configuration)\final /S&#xD;&#xA;rd &quot;$(ProjectDir)obj&quot; /s /q" />
   </Target>
 
 </Project>
