@@ -65,11 +65,11 @@
             // 
             label1.AutoSize = true;
             label1.Font = new Font("Segoe UI", 21.75F, FontStyle.Bold);
-            label1.Location = new Point(26, 11);
+            label1.Location = new Point(155, 11);
             label1.Name = "label1";
-            label1.Size = new Size(487, 50);
+            label1.Size = new Size(171, 50);
             label1.TabIndex = 3;
-            label1.Text = "OpenGL Project - Launcher";
+            label1.Text = "Curve3D";
             // 
             // label2
             // 
@@ -109,7 +109,7 @@
             // 
             label3.AutoSize = true;
             label3.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
-            label3.Location = new Point(169, 64);
+            label3.Location = new Point(169, 60);
             label3.Name = "label3";
             label3.Size = new Size(138, 32);
             label3.TabIndex = 7;

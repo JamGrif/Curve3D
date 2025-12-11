@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <BaseOutputPath>C:\Users\jamgr\Desktop\Stuff\dev\Projects\Curve3D\bin\Curve3DLauncher\x64</BaseOutputPath>
+    <BaseOutputPath>$(SolutionDir)\bin\$(Configuration)\Curve3DLauncher</BaseOutputPath>
     <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
     <Title></Title>
     <PlatformTarget>x64</PlatformTarget>
@@ -16,6 +16,12 @@
     <PackageIcon></PackageIcon>
     <SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
     <ApplicationIcon>Curve3D_Logo2.ico</ApplicationIcon>
+    <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>    
+	<OutputPath>$(SolutionDir)\bin\$(Configuration)\Curve3DLauncher</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -67,7 +73,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy /y /d $(SolutionDir)bin\Curve3D\x64\$(ConfigurationName) $(TargetDir) /S" />
+    <Exec Command="xcopy /y /d $(TargetDir) $(SolutionDir)bin\$(Configuration)\final /S" />
   </Target>
 
 </Project>

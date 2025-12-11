@@ -75,15 +75,15 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin\$(ProjectName)\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\intermediates\</IntDir>
     <LibraryPath>$(SolutionDir)dependencies\tinyXML\src;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(ProjectName)\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)bin\$(ProjectName)\intermediates\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(ProjectName)\</OutDir>
+    <IntDir>$(SolutionDir)bin\$(Configuration)\intermediates\</IntDir>
     <LibraryPath>$(SolutionDir)dependencies\tinyXML\src;$(LibraryPath)</LibraryPath>
     <TargetName>$(ProjectName)</TargetName>
   </PropertyGroup>
@@ -142,11 +142,21 @@
       <AdditionalDependencies>glfw3.lib;glew32sd.lib;opengl32.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\debug\assimp-vc143-mtd.dll $(TargetDir)
-mkdir $(TargetDir)res 
-xcopy /y /d $(SolutionDir)Curve3D\res $(TargetDir)res /S
-mkdir $(TargetDir)config
-xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(TargetDir)config /S</Command>
+      <Command>mkdir $(SolutionDir)bin\$(Configuration)\final
+
+xcopy /y /d $(TargetDir) $(SolutionDir)bin\$(Configuration)\final /S
+
+mkdir $(SolutionDir)bin\$(Configuration)\final\res
+xcopy /y /d $(SolutionDir)Curve3D\res $(SolutionDir)bin\$(Configuration)\final\res /S
+
+mkdir $(SolutionDir)bin\$(Configuration)\final\config
+xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(SolutionDir)bin\$(Configuration)\final\config /S
+
+xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\debug\assimp-vc143-mtd.dll $(SolutionDir)bin\$(Configuration)\final
+ 
+
+
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -169,16 +179,25 @@ xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(TargetDir)config /S</
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>
+      </GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)Curve3D\dependencies\GLFW\lib\release;$(SolutionDir)Curve3D\dependencies\GLEW\lib\release;$(SolutionDir)Curve3D\dependencies\assimp\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>glfw3.lib;glew32s.lib;opengl32.lib;assimp-vc143-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-mt.dll $(TargetDir)
-mkdir $(TargetDir)res 
-xcopy /y /d $(SolutionDir)Curve3D\res $(TargetDir)res /S
-mkdir $(TargetDir)config
-xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(TargetDir)config /S
+      <Command>mkdir $(SolutionDir)bin\$(Configuration)\final
+
+xcopy /y /d $(TargetDir) $(SolutionDir)bin\$(Configuration)\final /S
+
+mkdir $(SolutionDir)bin\$(Configuration)\final\res
+xcopy /y /d $(SolutionDir)Curve3D\res $(SolutionDir)bin\$(Configuration)\final\res /S
+
+mkdir $(SolutionDir)bin\$(Configuration)\final\config
+xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(SolutionDir)bin\$(Configuration)\final\config /S
+
+xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-mt.dll $(SolutionDir)bin\$(Configuration)\final
+ 
+
 
 </Command>
     </PostBuildEvent>
@@ -384,6 +403,7 @@ xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(TargetDir)config /S
   </ItemGroup>
   <ItemGroup>
     <None Include="config\imguiconfig.ini" />
+    <None Include="Curve3D.aps" />
     <None Include="res\shaders\basic-fragment.glsl" />
     <None Include="res\shaders\basic-vertex.glsl" />
     <None Include="res\shaders\blendingSprite-fragment.glsl" />

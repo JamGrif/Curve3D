@@ -9,8 +9,8 @@
 
 #include "glm/ext/matrix_clip_space.hpp"
 
-static constexpr int DEFAULT_WINDOW_WIDTH = 1920;
-static constexpr int DEFAULT_WINDOW_HEIGHT = 1080;
+static constexpr int DEFAULT_WINDOW_WIDTH = 2560;
+static constexpr int DEFAULT_WINDOW_HEIGHT = 1440;
 
 static constexpr float NEAR_PLANE = 0.01f;
 static constexpr float FAR_PLANE = 1000.0f;
