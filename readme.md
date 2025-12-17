@@ -2,28 +2,31 @@
 
 # Curve3D  
 
-The goal of Curve3D is to build a simple level editor within a lightweight C++ 3D OpenGL engine. This project is a continuation of a previous project [**here**](https://github.com/JamGrif/OpenGLProject) and uses a variety of additional libraries to achieve this goal. 
+The goal of Curve3D is to build a simple level editor within a lightweight C++ 3D OpenGL engine. This project is a continuation of a [**previous engine**](https://github.com/JamGrif/OpenGLProject) and makes use of a variety of external libraries to achieve this goal. 
 
-Curve3D contains a collection of 3D graphics features and works by parsing a custom .xml scene file which contains the necessary components of a 3D scene. Curve3D uses a launcher, Curve3DLauncher, which is built in C# with Winforms to set various launch parameters, such as the initial scene to load.  
+Curve3D features a collection of 3D graphics features and operates by parsing a custom *.xml* scene file containing all the required components of a 3D scene. The engine is launched via **Curve3DLauncher**, a C# WinForms application that allows users to configure launch parameters, such as the initial scene to load.  
 
-This project is an experiment of mine with an overall aim to further push my OpenGL, modern C++, C# and mathematical skills while also improving my general software design ability.  
+This project serves as a personal experiment, with the aim of further developing my knowledge of OpenGL, modern C++, C# and mathematics, while also improving my overall software design skills.  
 
 <img src="media/banner6.jpg" width=300>
     
 # Features
-- ADS Blinn-Phong Light Reflection Model  
-- Diffuse, Specular, Emission, Height & Normal texture maps  
-- Multithreading for asset deserialization  
-- Material system that combines textures, mesh, shader and cubemap files to create a model  
-- Scene .xml loading during runtime  
-- Load external 3D models, textures & shaders  
-- ImGui interface with a scene editor (Change scene, adjust lights status, view and delete entity values)  
-- Winforms launcher to set initial program parameters  
-- Console logging system for error handling  
-- Coloured lighting from Directional/Point/Spot lights  
-- Skybox Cubemap  
-- Reflection Environment Map & Refraction Environment Map  
-- Mouse + keyboard input with camera movement on all 3 axis  
+- ADS Blinn-Phong light reflection model  
+- Diffuse, specular, emission, height and normal texture maps  
+- Multithreaded asset deserialisation  
+- Material system that combines texture, mesh, shader and cubemap files  
+- Runtime scene loading from custom *.xml* files  
+- Support for loading external 3D models, textures and shaders    
+- ImGui interface with an integrated scene editor 
+    - Change scenes
+    - Adjust light states
+    - View and delete entities
+- WinForms launcher for setting initial program parameters  
+- Console-based logging system for error handling  
+- Coloured lighting from directional, point and spot lights  
+- Skybox cubemap support  
+- Reflection and refraction environment mapping  
+- Mouse and keyboard input with full camera movement on all three axes  
 
 **OLD** Project Showcase Video - https://www.youtube.com/watch?v=QOnscYxgrNQ
 
