@@ -8,7 +8,7 @@ constexpr static float ONE_SECOND = 1.0;
 /// Sets initial time
 /// Done once on application start
 /// </summary>
-void EngineClock::Init()
+void Clock::Init()
 {
 	m_previousTime = glfwGetTime();
 }
@@ -17,7 +17,7 @@ void EngineClock::Init()
 /// Calculate applications delta time and FPS
 /// Called every frame
 /// </summary>
-void EngineClock::Tick()
+void Clock::Tick()
 {
 	// Delta time
 	m_currentFrame = glfwGetTime();

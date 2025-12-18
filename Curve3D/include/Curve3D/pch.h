@@ -10,7 +10,7 @@
 #include "Core/CommonFwd.h"
 
 #include "Core/Log.h"
-#include "Core/EngineClock.h"
+#include "Core/Clock.h"
 #include "Core/Vector3D.h"
 
 #include "Rendering/OpenGLErrorCheck.h"

@@ -6,7 +6,7 @@
 /// Global timer for the application
 /// Ticked every frame and can return application's delta time
 /// </summary>
-class EngineClock
+class Clock
 {
 public:
 
@@ -16,9 +16,9 @@ public:
 	double		GetDeltaTime() { return m_deltaTime; }
 	int			GetFrameCount() { return m_frameCountToDisplay; }
 
-	static EngineClock* Get() // Get instance
+	static Clock* Get() // Get instance
 	{
-		static EngineClock* s_pInstance = new EngineClock;
+		static Clock* s_pInstance = new Clock;
 		return s_pInstance;
 	}
 
@@ -32,11 +32,11 @@ private:
 	uint16_t	m_frameCountToDisplay;
 	double		m_currentFrame;
 
-	EngineClock() :
+	Clock() :
 		m_deltaTime(0.0), m_lastFrame(0.0), m_previousTime(0.0),
 		m_frameCount(0), m_frameCountToDisplay(0), m_currentFrame(0.0) {}
-	~EngineClock() {}
-	EngineClock(const EngineClock&) = delete;
+	~Clock() {}
+	Clock(const Clock&) = delete;
 };
 
 

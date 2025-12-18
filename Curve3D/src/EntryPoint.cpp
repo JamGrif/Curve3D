@@ -26,8 +26,8 @@ int wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LP
 		return 1;
 	}
 
-	Engine::SetInitalScene(processArgument);
-	Engine::StartEngine();
+	Curve3D::SetInitalParameters(processArgument);
+	Curve3D::StartCurve3D();
 	
 	//KeepConsoleOpen();
 

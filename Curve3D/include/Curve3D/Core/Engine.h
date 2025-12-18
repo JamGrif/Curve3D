@@ -10,20 +10,20 @@ class Scene;
 
 #include <string>
 
-namespace Engine
+namespace Curve3D
 {
-	bool StartEngine();
-	void SetInitalScene(const std::string& text);
+	void SetInitalParameters(const std::string& text);
+	void StartCurve3D();
 
 	/// <summary>
 	/// Encapsulates the entire engine
 	/// All parts of the engine are initialized, looped through and cleaned from this class
 	/// </summary>
-	class EngineMain
+	class Program
 	{
 	private:
-		EngineMain();
-		~EngineMain();
+		Program();
+		~Program();
 
 		bool					Initialise(const std::string& text);
 		void					Loop();
@@ -38,6 +38,6 @@ namespace Engine
 
 		Scene* m_loadedScene;
 
-		friend bool StartEngine();
+		friend void StartCurve3D();
 	};
 }

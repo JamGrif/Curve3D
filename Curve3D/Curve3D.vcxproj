@@ -152,11 +152,7 @@ xcopy /y /d $(SolutionDir)Curve3D\res $(SolutionDir)bin\$(Configuration)\final\r
 mkdir $(SolutionDir)bin\$(Configuration)\final\config
 xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(SolutionDir)bin\$(Configuration)\final\config /S
 
-xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\debug\assimp-vc143-mtd.dll $(SolutionDir)bin\$(Configuration)\final
- 
-
-
-</Command>
+xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\debug\assimp-vc143-mtd.dll $(SolutionDir)bin\$(Configuration)\final</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -195,11 +191,7 @@ xcopy /y /d $(SolutionDir)Curve3D\res $(SolutionDir)bin\$(Configuration)\final\r
 mkdir $(SolutionDir)bin\$(Configuration)\final\config
 xcopy /y /d $(SolutionDir)Curve3D\config\imguiconfig.ini $(SolutionDir)bin\$(Configuration)\final\config /S
 
-xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-mt.dll $(SolutionDir)bin\$(Configuration)\final
- 
-
-
-</Command>
+xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-mt.dll $(SolutionDir)bin\$(Configuration)\final</Command>
     </PostBuildEvent>
     <Lib>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -276,7 +268,7 @@ xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-m
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Core\EngineClock.cpp" />
+    <ClCompile Include="src\Core\Clock.cpp" />
     <ClCompile Include="src\Rendering\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Scene\SceneSky.cpp" />
     <ClCompile Include="src\Rendering\Model.cpp" />
@@ -294,7 +286,7 @@ xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-m
   <ItemGroup>
     <ClInclude Include="include\Curve3D\Core\CommonFwd.h" />
     <ClInclude Include="include\Curve3D\Core\Engine.h" />
-    <ClInclude Include="include\Curve3D\Core\EngineClock.h" />
+    <ClInclude Include="include\Curve3D\Core\Clock.h" />
     <ClInclude Include="include\Curve3D\Core\InputHandler.h" />
     <ClInclude Include="include\Curve3D\Core\Log.h" />
     <ClInclude Include="include\Curve3D\Core\UI.h" />

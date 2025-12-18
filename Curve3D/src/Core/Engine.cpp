@@ -16,51 +16,49 @@ static constexpr int CONSOLE_HEIGHT = 500;
 // Enable console if debug mode
 #ifdef _DEBUG
 	#include <windows.h>
-	#define startConsole()																								\
+	#define StartConsole()																								\
 		AllocConsole();																									\
 		freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);																\
 		MoveWindow(GetConsoleWindow(), CONSOLE_STARTING_X, CONSOLE_STARTING_Y, CONSOLE_WIDTH, CONSOLE_HEIGHT, TRUE);
 #else
-	#define startConsole()
+	#define StartConsole()
 #endif
 
-namespace Engine
+namespace Curve3D
 {
 	static bool ENGINE_STARTED = false;
 	static std::string sceneToLoad;
 
-	bool StartEngine()
+	void SetInitalParameters(const std::string& text)
 	{
-		//sceneToLoad = initialScene;
+		sceneToLoad = text;
 
-		if (ENGINE_STARTED)
-			return false;
+		ENGINE_STARTED = true;
+	}
+
+	void StartCurve3D()
+	{
+		if (!ENGINE_STARTED)
+			return;
 
 		ENGINE_STARTED = true;
 
-		startConsole();
-		EngineMain* em = new EngineMain();
+		StartConsole();
+
+		Program* em = new Program();
 
 		if (em->Initialise(sceneToLoad))
 			em->Loop();
 
 		delete em;
-
-		return false;
 	}
 
-	void SetInitalScene(const std::string& text)
-	{
-		sceneToLoad = text;
-	}
-
-
-	EngineMain::EngineMain()
+	Program::Program()
 		:m_UI(nullptr), m_loadedScene(nullptr)
 	{
 	}
 
-	EngineMain::~EngineMain()
+	Program::~Program()
 	{
 		if (m_loadedScene)
 			delete m_loadedScene;
@@ -77,7 +75,7 @@ namespace Engine
 	/// Initializes OpenGL libraries, creates the window, enables rendering options and creates class objects
 	/// Called once at program start
 	/// </summary>
-	bool EngineMain::Initialise(const std::string& text)
+	bool Program::Initialise(const std::string& text)
 	{
 		// Initialize all systems used by application
 		Log::Init();
@@ -86,7 +84,7 @@ namespace Engine
 
 		TheOpenGLRenderer::Get()->Init();
 
-		EngineClock::Get()->Init();
+		Clock::Get()->Init();
 
 		InputHandler::Get()->Init();
 
@@ -102,11 +100,11 @@ namespace Engine
 	/// Entire loop of program
 	/// Called every frame
 	/// </summary>
-	void EngineMain::Loop()
+	void Program::Loop()
 	{
 		while (!TheOpenGLWindow::Get()->ShouldClose())
 		{
-			EngineClock::Get()->Tick();
+			Clock::Get()->Tick();
 
 			HandleInput();
 			UpdateApp();
@@ -117,7 +115,7 @@ namespace Engine
 	/// <summary>
 	/// User input functions of the application
 	/// </summary>
-	void EngineMain::HandleInput()
+	void Program::HandleInput()
 	{
 		// Check if user wants to toggle UI visibility
 		if (InputHandler::Get()->GetKeyPressedOnce(Keyboard::Q))
@@ -127,7 +125,7 @@ namespace Engine
 	/// <summary>
 	/// Update functions of the application
 	/// </summary>
-	void EngineMain::UpdateApp()
+	void Program::UpdateApp()
 	{
 		if (m_loadedScene)
 			m_loadedScene->UpdateScene();
@@ -136,7 +134,7 @@ namespace Engine
 	/// <summary>
 	/// Render functions of the application
 	/// </summary>
-	void EngineMain::RenderApp()
+	void Program::RenderApp()
 	{
 		TheOpenGLRenderer::Get()->StartOfFrame();
 
@@ -152,7 +150,7 @@ namespace Engine
 	/// <summary>
 	/// Changes the scene to specified scene name, unloads the currently loaded scene and refreshes the UI light buttons
 	/// </summary>
-	bool EngineMain::SetScene(const std::string& sceneName)
+	bool Program::SetScene(const std::string& sceneName)
 	{
 		// Prevent reloading current scene
 		if (m_loadedScene && sceneName == m_loadedScene->GetSceneName())
