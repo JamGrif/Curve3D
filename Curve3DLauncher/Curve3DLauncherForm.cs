@@ -23,6 +23,14 @@ namespace Launcher
         // Invoked when the form is loaded
         private void LauncherForm_Load(object sender, EventArgs e)
         {
+            // Only used when developing on own machine, ignored if ran from another users machine
+            string BatchfilePath = "../../../RefreshResFile.bat";
+            if (File.Exists(BatchfilePath))
+            {
+                Process? BatchfileProcess = Process.Start(BatchfilePath);
+                BatchfileProcess.WaitForExit();
+            }
+
             string SceneResourcePath = @"res\scenes";
 
             // Get the filename of all loadable scene files
@@ -37,7 +45,7 @@ namespace Launcher
             SceneSelectListBox.SelectedIndex = -1;
             SceneSelectListBox.DataSource = SceneNameList;
 
-            LaunchButton.Enabled = false;
+            //LaunchButton.Enabled = false;
         }
 
         // Launch button - Start the Demo.exe process
