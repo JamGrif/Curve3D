@@ -81,7 +81,7 @@ Scene::~Scene()
 
 	MeshManager::Get()->ClearAllResources();
 	TextureManager::Get()->ClearAllResources();
-	ShaderManager::Get()->ResetAllResources();
+	ShaderManager::Get()->ClearAllResources();
 	CubemapManager::Get()->ClearAllResources();
 
 	TheMaterialManager::Instance()->ClearAllMaterials();

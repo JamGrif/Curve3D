@@ -38,8 +38,6 @@ private:
 	virtual void	Parse(const std::string& firstFilepath, const std::string& secondFilepath) {}
 	virtual void	Create() override;
 
-	virtual void	Reset();
-
 private:
 
 	// Texture data

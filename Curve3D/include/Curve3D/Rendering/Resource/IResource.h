@@ -16,7 +16,6 @@ public:
 	virtual void		Parse(const std::string& filepath) = 0;
 	virtual void		Parse(const std::string& firstFilepath, const std::string& secondFilepath) = 0;
 	virtual void		Create() = 0;
-	virtual void		Reset() = 0;
 
 	OpenGLIndex			GetOpenGLID() { return m_OpenGLResourceID; }
 	bool				GetCreated() { return m_bIsCreated; }

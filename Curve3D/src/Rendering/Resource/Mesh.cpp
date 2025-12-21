@@ -135,14 +135,6 @@ void Mesh::Create()
 }
 
 /// <summary>
-/// What the mesh will do when its reset
-/// Unused in this class
-/// </summary>
-void Mesh::Reset()
-{
-}
-
-/// <summary>
 /// Bind the VBO and EBO to the OpenGL context and the vertex attributes to the currently bound shader
 /// </summary>
 void Mesh::Bind()

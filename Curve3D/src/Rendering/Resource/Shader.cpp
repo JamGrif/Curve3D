@@ -169,21 +169,6 @@ void Shader::Unbind()
 }
 
 /// <summary>
-/// Reset the OpenGL stuff for the shader - avoids having to re-parse the same file
-/// </summary>
-void Shader::Reset()
-{
-	// Delete internal OpenGL program
-	glCall(glDeleteProgram(m_OpenGLResourceID));
-
-	// Create a new program with parsed shader source code
-	Create();
-
-	// Clear the location cache
-	m_uniformLocationCache.clear();
-}
-
-/// <summary>
 /// Set an int uniform value at uniformName
 /// </summary>
 void Shader::SetUniform(const std::string& uniformName, int value)

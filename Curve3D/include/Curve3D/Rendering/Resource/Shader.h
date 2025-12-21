@@ -30,8 +30,6 @@ private:
 	virtual void	Bind();
 	virtual void	Unbind();
 
-	virtual void	Reset();
-
 	inline int		GetUniformLocation(const std::string& uniformName);
 
 private:

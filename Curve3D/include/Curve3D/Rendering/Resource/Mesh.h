@@ -26,8 +26,6 @@ public:
 
 	 virtual void	Create() override;
 
-	 virtual void	Reset() override;
-
 private:
 
 	uint32_t		m_meshEBO;

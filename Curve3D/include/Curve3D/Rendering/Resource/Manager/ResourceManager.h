@@ -109,17 +109,6 @@ public:
 		m_resourcePool.clear();
 	}
 
-	/// <summary>
-	/// Calls .Reset() on all resources of a specific type
-	/// </summary>
-	void ResetAllResources()
-	{
-		for (const auto& [resourceID, resourceObject] : m_resourcePool)
-		{
-			resourceObject->Reset();
-		}
-	}
-
 	static ResourceManager<T>* Get() // Get instance
 	{
 		static ResourceManager<T>* s_pInstance = new ResourceManager<T>;

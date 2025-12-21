@@ -36,8 +36,6 @@ private:
 	virtual void	Bind();
 	virtual void	Unbind();
 
-	virtual void	Reset();
-
 private:
 
 	// Sampler2D slot in shader
