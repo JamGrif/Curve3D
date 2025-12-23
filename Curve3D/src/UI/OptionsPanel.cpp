@@ -67,42 +67,21 @@ void OptionsPanel::Render()
 			sceneLM->GetPointLight(i).lock()->m_bLightActive = m_bPointLightActiveButton[i] ? true : false;
 		}
 	}
-	
-	// Screen PostProcessing Filter
-	ImGui::Text("Change Post-Processing Filter:");
-	if (ImGui::Button("Normal"))
-		TheOpenGLRenderer::Get()->SetScreenFilter(ScreenFilter::Default);
-	
-	if (ImGui::Button("Inverse"))
-		TheOpenGLRenderer::Get()->SetScreenFilter(ScreenFilter::Inverse);
-	
-	if (ImGui::Button("Greyscale"))
-		TheOpenGLRenderer::Get()->SetScreenFilter(ScreenFilter::Greyscale);
-	
-	if (ImGui::Button("Edge Detection"))
-		TheOpenGLRenderer::Get()->SetScreenFilter(ScreenFilter::EdgeDetection);
-	
-	if (ImGui::Button("???"))
-		TheOpenGLRenderer::Get()->SetScreenFilter(ScreenFilter::Weird);
 }
 
 /// <summary>
 /// Inherited from IPanel
-/// Sets up the available light checkboxes depending on which ones are present in scene 
+/// Sets up the available light checkbox depending on which ones are present in scene 
 /// </summary>
 void OptionsPanel::SceneChange()
 {
 	// Get new scene lightmanager
 	std::shared_ptr<SceneLightManager> pLightManager = (*m_pSceneHandle)->GetSceneLightManager().lock();
 
-	// Check how many point lights in scene
-	m_totalPointLights = pLightManager->GetCurrentPointLights();
-
-	// Check if directionalLight in scene
-	m_bDirectionalLightInScene = pLightManager->GetCurrentDirectionalLights() > 0 ? true : false;
-
-	// Check if spotLight in scene
-	m_bSpotLightInScene = pLightManager->GetCurrentSpotLights() > 0 ? true : false;
+	// Check how many lights in scene
+	m_totalPointLights			= pLightManager->GetCurrentPointLights();
+	m_bDirectionalLightInScene	= pLightManager->GetCurrentDirectionalLights() > 0 ? true : false;
+	m_bSpotLightInScene			= pLightManager->GetCurrentSpotLights() > 0 ? true : false;
 
 	// Check if each pointLight in scene
 	for (int i = 0; i < m_totalPointLights; i++)
