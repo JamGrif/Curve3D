@@ -11,7 +11,7 @@
 #include "Scene/SceneCamera.h"
 
 Model::Model(const ModelLoaderParams& pParams)
-	:m_modelID(pParams.modelID), m_materialID(pParams.materialID), m_meshID(pParams.meshID),
+	:m_modelID(pParams.modelID), m_materialID(pParams.materialName), m_meshID(pParams.meshFile),
 	m_position(pParams.position), m_rotation(pParams.rotation), m_scale(pParams.scale),
 	m_mMat{ 1.0f }, m_vMat{ 1.0f }, m_tMat{ 1.0f }, m_rMat{ 1.0f }, m_sMat{ 1.0f },
 	m_programProjectionMatrix(TheOpenGLRenderer::Get()->GetProjectionMatrix())

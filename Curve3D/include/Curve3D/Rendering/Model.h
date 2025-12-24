@@ -13,8 +13,8 @@ struct ModelLoaderParams
 	Vector3D rotation;
 	Vector3D scale;
 
-	std::string materialID;			// ID of material that the model will use
-	ResourceID meshID;				// ID of mesh that the model will use
+	std::string materialName;		// Name of material that the model will use
+	ResourceFile	meshFile;			// File of mesh that the model will use
 };
 
 /// <summary>
@@ -37,7 +37,7 @@ public:
 	const Vector3D&		GetRotation() const { return m_rotation; }
 	const Vector3D&		GetScale() const { return m_scale; }
 
-	const ResourceID&	GetMeshID() const { return m_meshID; }
+	const ResourceFile&	GetMeshID() const { return m_meshID; }
 	const std::string&	GetMaterialID() const { return m_materialID; }
 
 private:
@@ -50,7 +50,7 @@ private:
 	std::string			m_modelID;
 
 	// For MeshManager - The mesh this model uses
-	ResourceID			m_meshID;
+	ResourceFile			m_meshID;
 
 	// For MaterialManager - The material this model uses
 	std::string			m_materialID;

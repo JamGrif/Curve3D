@@ -4,7 +4,7 @@
 /// <summary>
 /// Create a new material using the values in the MaterialLoaderParams and add it to the materialMap at ID
 /// </summary>
-bool MaterialManager::CreateMaterial(const std::string& materialID, const MaterialLoaderParams& pParams)
+bool MaterialManager::CreateMaterial(const std::string& materialID, const MaterialLoader& pParams)
 {
 	// Check if material with ID already exists
 	if (m_materialMap.find(materialID) != m_materialMap.end())

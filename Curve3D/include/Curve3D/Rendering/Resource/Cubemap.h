@@ -2,6 +2,11 @@
 
 #include "Rendering/Resource/IResource.h"
 
+struct CubemapLoader :
+	public IResourceLoader
+{
+};
+
 enum cubeFaces
 {
 	e_START_OF_CUBEFACE_ENUM	= 0,
@@ -28,6 +33,7 @@ public:
 
 private:
 
+	virtual void	Parse(IResourceLoader* resourceLoader) {}
 	virtual void	Parse(const std::string& facesFilepath);
 	virtual void	Parse(const std::string& firstFilepath, const std::string& secondFilepath) {}
 

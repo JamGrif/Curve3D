@@ -11,7 +11,6 @@ struct Material
 	sampler2D height;
 	float specularShininess;
 
-	int normalizeTex;
 	bool usingNormal;
 	bool usingEmission;
 	bool usingHeight;
@@ -104,15 +103,8 @@ void main(void)
 			//Adjust texcoords to use the height map
 			texCoords = ParallaxMapping(varyingTexCoords, viewDir);
 		}
-		//Normalize texture or not (obtain normal data from normal map in range 0 to 1
-		if (material.normalizeTex == 1)
-		{
-			norm = normalize(texture(material.normal, texCoords).rgb);
-		}
-		else if (material.normalizeTex == 0)
-		{
-			norm = texture(material.normal, texCoords).rgb;
-		}
+
+		norm = texture(material.normal, texCoords).rgb;
 		norm = normalize(norm * 2.0 - 1.0); //Transfer normals to range -1 to 1
 	}
 	//Surface does not use normal map so do lighting as normal

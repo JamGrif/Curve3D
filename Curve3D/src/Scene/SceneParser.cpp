@@ -31,21 +31,21 @@ SceneParser::SceneParser()
 /// </summary>
 bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& sceneModels, std::shared_ptr<SceneLightManager>& sceneLightManager, std::shared_ptr<SceneSky>* sceneSky)
 {
-	TiXmlDocument levelDocument;
+	TiXmlDocument sceneDocument;
 
 	// Load scene XML file and check status
-	if (!levelDocument.LoadFile(SCENE_FILEPATH_PREFIX + sceneFilepath + SCENE_FILEPATH_SUFFIX, TIXML_ENCODING_UTF8))
+	if (!sceneDocument.LoadFile(SCENE_FILEPATH_PREFIX + sceneFilepath + SCENE_FILEPATH_SUFFIX, TIXML_ENCODING_UTF8))
 	{
-		PRINT_TRACE("{0}", levelDocument.ErrorDesc());
+		PRINT_TRACE("{0}", sceneDocument.ErrorDesc());
 		return false;
 	}
 
 	// Store <scene> node
-	TiXmlElement* pFileRoot = levelDocument.RootElement();
+	TiXmlElement* pFileRoot = sceneDocument.RootElement();
 
 	// Create sky using skyid as the cubemap filename
 	*sceneSky = std::make_shared<SceneSky>(pFileRoot->Attribute(SKY_ATTRIBUTE));
-	ResourceID m_tempSkyCubemapID = pFileRoot->Attribute(SKY_ATTRIBUTE);
+	ResourceFile m_tempSkyCubemapID = pFileRoot->Attribute(SKY_ATTRIBUTE);
 
 	const TiXmlElement* pMaterialElement = nullptr, * pLightElement = nullptr, * pModelElement = nullptr;
 
@@ -126,27 +126,24 @@ void SceneParser::ParseMaterialsNode(const TiXmlElement* pMaterialsElement)
 			continue;
 
 		// Fill out materials loading parameters
-		MaterialLoaderParams tempLoaderParams;
+		MaterialLoader tempLoaderParams;
 
-		materialNode->QueryStringAttribute("diffuseid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::DIFFUSE)]);
-		materialNode->QueryStringAttribute("specularid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::SPECULAR)]);
-		materialNode->QueryStringAttribute("normalid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::NORMAL)]);
-		materialNode->QueryStringAttribute("heightid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::HEIGHT)]);
-		materialNode->QueryStringAttribute("emissionid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::EMISSION)]);
-
-		materialNode->QueryBoolAttribute("normalmapNormalize", &tempLoaderParams.normalMapNormalize);
-		materialNode->QueryFloatAttribute("heightmapHeight", &tempLoaderParams.heightMapHeight);
+		materialNode->QueryStringAttribute("DiffuseFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::DIFFUSE)]);
+		materialNode->QueryStringAttribute("SpecularFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::SPECULAR)]);
+		materialNode->QueryStringAttribute("NormalFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::NORMAL)]);
+		materialNode->QueryStringAttribute("HeightFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::HEIGHT)]);
+		materialNode->QueryStringAttribute("EmissionFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::EMISSION)]);
 
 		// Materials are split into separate containers to allow faster parsing through multi threading
 		if (bInsertInFirst)
 		{
 			bInsertInFirst = !bInsertInFirst;
-			m_firstMatMap.insert({ materialNode->Attribute("id"), tempLoaderParams });
+			m_firstMatMap.insert({ materialNode->Attribute("Name"), tempLoaderParams });
 		}
 		else
 		{
 			bInsertInFirst = !bInsertInFirst;
-			m_secondMatMap.insert({ materialNode->Attribute("id"), tempLoaderParams });
+			m_secondMatMap.insert({ materialNode->Attribute("Name"), tempLoaderParams });
 		}
 	}
 }
@@ -249,8 +246,8 @@ void SceneParser::ParseModelsNode(const TiXmlElement* pModelElement, SceneModels
 		// Fill out initial value of a model from XML scene data
 		ModelLoaderParams tempLoaderParams;
 
-		modelElement->QueryStringAttribute("material",	&tempLoaderParams.materialID);
-		modelElement->QueryStringAttribute("mesh",		&tempLoaderParams.meshID);
+		modelElement->QueryStringAttribute("MaterialName",	&tempLoaderParams.materialName);
+		modelElement->QueryStringAttribute("MeshFile",		&tempLoaderParams.meshFile);
 
 		modelElement->QueryFloatAttribute("posX",		&tempLoaderParams.position.SetX());
 		modelElement->QueryFloatAttribute("posY",		&tempLoaderParams.position.SetY());
@@ -265,13 +262,13 @@ void SceneParser::ParseModelsNode(const TiXmlElement* pModelElement, SceneModels
 		modelElement->QueryFloatAttribute("scaleZ",		&tempLoaderParams.scale.SetZ());
 
 		// Set models ID as number of times the mesh has currently been used in the scene
-		tempMap.insert({ tempLoaderParams.meshID , tempLoaderParams.meshID });
-		tempLoaderParams.modelID = tempLoaderParams.meshID + " " + std::to_string(tempMap.count(tempLoaderParams.meshID));
+		tempMap.insert({ tempLoaderParams.meshFile , tempLoaderParams.meshFile });
+		tempLoaderParams.modelID = tempLoaderParams.meshFile + " " + std::to_string(tempMap.count(tempLoaderParams.meshFile));
 
 		sceneModels.emplace_back(std::make_shared<Model>(tempLoaderParams));
 
 		// Use the meshID to create initial mesh
-		MeshManager::Get()->AddResource(tempLoaderParams.meshID);
+		MeshManager::Get()->AddResource(tempLoaderParams.meshFile);
 	}
 }
 

@@ -3,7 +3,7 @@
 class TiXmlElement;
 
 struct ILightLoaderParams;
-struct MaterialLoaderParams;
+struct MaterialLoader;
 
 /// <summary>
 /// Parser reads in a XML file containing all of the scene information from res/scenes/
@@ -28,7 +28,7 @@ private:
 
 	void ParseBaseLight(const TiXmlElement* lightNode, std::shared_ptr<ILightLoaderParams> pParams);
 
-	typedef std::unordered_map<std::string, MaterialLoaderParams> PendingMaterialPool;
+	typedef std::unordered_map<std::string, MaterialLoader> PendingMaterialPool;
 	PendingMaterialPool m_firstMatMap;
 	PendingMaterialPool m_secondMatMap;
 };

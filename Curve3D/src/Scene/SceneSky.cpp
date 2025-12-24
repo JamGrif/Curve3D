@@ -7,7 +7,7 @@
 #include "Rendering/OpenGLRenderer.h"
 #include "Scene/SceneCamera.h"
 
-SceneSky::SceneSky(const ResourceID& cubemapID)
+SceneSky::SceneSky(const ResourceFile& cubemapID)
 	:m_cubemapID(cubemapID), m_shaderID("skyShader"), m_projectionMatrix(TheOpenGLRenderer::Get()->GetProjectionMatrix())
 {
 	ShaderManager::Get()->AddResource(m_shaderID, "res/shaders/sky-vertex.glsl", "res/shaders/sky-fragment.glsl");

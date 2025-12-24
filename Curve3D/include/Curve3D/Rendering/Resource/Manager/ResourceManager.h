@@ -15,11 +15,26 @@ class ResourceManager
 {
 public:
 
+	bool AddResource(IResourceLoader* resourceLoader)
+	{
+		// Check if resource with ID already exists
+		if (m_resourcePool.find(resourceLoader->file) != m_resourcePool.end())
+			return false;
+
+		// Create and parse the resource file
+		std::shared_ptr<T> pResource = std::make_shared<T>();
+		pResource->Parse(resourceLoader);
+
+		m_resourcePool.insert({ resourceLoader->file, pResource });
+
+		return true;
+	}
+
 	/// <summary>
 	/// 1 / 2 of resource creation
 	/// Adds a new resource and parses its data file
 	/// </summary>
-	bool AddResource(const ResourceID& resourceID)
+	bool AddResource(const ResourceFile& resourceID)
 	{
 		// Check if resource with ID already exists
 		if (m_resourcePool.find(resourceID) != m_resourcePool.end())
@@ -38,7 +53,7 @@ public:
 	/// 1 / 2 of resource creation
 	/// Adds a new resource and parses its data file
 	/// </summary>
-	bool AddResource(const ResourceID& resourceID, const std::string& vertexPath, const std::string& fragmentPath)
+	bool AddResource(const ResourceFile& resourceID, const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		// Check if resource with ID already exists
 		if (m_resourcePool.find(resourceID) != m_resourcePool.end())
@@ -59,7 +74,7 @@ public:
 	/// </summary>
 	void CreateAllResources()
 	{
-		for (const auto& [resourceID, resourceObject] : m_resourcePool)
+		for (const auto& [ResourceFile, resourceObject] : m_resourcePool)
 		{
 			// If resource isn't already created, create it
 			if (!resourceObject->GetCreated())
@@ -70,7 +85,7 @@ public:
 	/// <summary>
 	/// Bind resource at resourceID to the OpenGL context
 	/// </summary>
-	void BindResourceAtID(const ResourceID& resourceID)
+	void BindResourceAtID(const ResourceFile& resourceID)
 	{
 		if (m_resourcePool.count(resourceID))
 		{
@@ -81,7 +96,7 @@ public:
 	/// <summary>
 	/// Unbind resource at resourceID from the OpenGL context
 	/// </summary> 
-	void UnbindResourceAtID(const ResourceID& resourceID)
+	void UnbindResourceAtID(const ResourceFile& resourceID)
 	{
 		if (m_resourcePool.count(resourceID))
 		{
@@ -92,7 +107,7 @@ public:
 	/// <summary>
 	/// Return the resource at resourceID allowing public functions to be called on that resource
 	/// </summary>
-	std::shared_ptr<T> GetResourceAtID(const ResourceID& resourceID)
+	std::shared_ptr<T> GetResourceAtID(const ResourceFile& resourceID)
 	{
 		if (m_resourcePool.count(resourceID))
 		{
@@ -116,7 +131,7 @@ public:
 	}
 private:
 
-	std::unordered_map<ResourceID, std::shared_ptr<T>> m_resourcePool;
+	std::unordered_map<ResourceFile, std::shared_ptr<T>> m_resourcePool;
 
 	ResourceManager() {}
 	~ResourceManager() {}

@@ -13,7 +13,7 @@ typedef std::unordered_map<std::string, std::shared_ptr<Material>> MaterialPool;
 class MaterialManager
 {
 public:
-	bool			CreateMaterial(const std::string& materialID, const MaterialLoaderParams& pParams);
+	bool			CreateMaterial(const std::string& materialID, const MaterialLoader& pParams);
 
 	void			BindMaterialAtID(const std::string& materialID, const glm::mat4& modelMat);
 	void			UnbindMaterialAtID(const std::string& materialID);

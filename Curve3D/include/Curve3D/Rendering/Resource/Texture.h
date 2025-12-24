@@ -9,13 +9,17 @@
 enum class TextureType
 {
 	UNSET					= -1,
-	START_OF_TEXTURETYPE	= 0,
-	DIFFUSE					= START_OF_TEXTURETYPE,
+	DIFFUSE					= 0,
 	SPECULAR				= 1,
 	EMISSION				= 2,
 	NORMAL					= 3,
 	HEIGHT					= 4,
-	END_OF_TEXTURETYPE
+};
+
+struct TextureLoader :
+	public IResourceLoader
+{
+	TextureType textureType;
 };
 
 /// <summary>
@@ -34,7 +38,8 @@ private:
 	virtual void	Bind() override;
 	virtual void	Unbind() override;
 
-	virtual void	Parse(const std::string& filepath) override;
+	virtual void	Parse(IResourceLoader* resourceLoader) override;
+	virtual void	Parse(const std::string& filepath) {};
 	virtual void	Parse(const std::string& firstFilepath, const std::string& secondFilepath) {}
 	virtual void	Create() override;
 

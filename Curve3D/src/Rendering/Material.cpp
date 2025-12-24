@@ -8,34 +8,49 @@
 
 #include "glm\gtc\matrix_transform.hpp"
 
-static const char* NULL_TEXTURE = "null";
 
-Material::Material(const MaterialLoaderParams& pParams)
+Material::Material(const MaterialLoader& pParams)
 	:m_shaderID("lightingShader"),
 	m_textureMapUsing{ false, false, false, false, false },
-	m_pAppProjectionMatrix(OpenGLRenderer::Get()->GetProjectionMatrix())
+	m_pAppProjectionMatrix(OpenGLRenderer::Get()->GetProjectionMatrix()),
+	m_heightMapHeight(0.01f)
 {
 	// Go through MaterialLoaderParams and set each texture type that is used
-	for (int i = static_cast<int>(TextureType::START_OF_TEXTURETYPE); i != static_cast<int>(TextureType::END_OF_TEXTURETYPE); i++)
+	for (int textureSlot = 0; textureSlot != MATERIAL_TEXTURE_SLOTS; textureSlot++)
 	{
-		// Check if texture type is used in material
-		if (pParams.textureMapIDs[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i] != NULL_TEXTURE)
+		// Check if texture slot is used in material
+		if (pParams.textureFile[textureSlot] == NULL_TEXTURE)
 		{
-			// Set texture ID
-			m_textureMapIDs[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i] = pParams.textureMapIDs[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i];
-			m_textureMapUsing[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i] = true;
-
-			// Create Texture resource with textureMapID
-			TextureManager::Get()->AddResource(pParams.textureMapIDs[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i]);
-			TextureManager::Get()->GetResourceAtID(pParams.textureMapIDs[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i])->setTextureType(static_cast<TextureType>(static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i));
+			m_textureFile[textureSlot] = NULL_TEXTURE;
+			continue;
 		}
-	}
 
-	m_bNormalMapNormalize = pParams.normalMapNormalize;
-	m_heightMapHeight = pParams.heightMapHeight;
+		//	BELOW IS WHERE YOU WANT TO RETURN TRUE OR FALSE WITH ADDRESOURCE TO CHECK IF ITS SUCCESSFULLY MADE.
+		// IF FALSE THEN NOT CREATE TEXTURE
+		// CAN PROBS MERGE M_TEXTUREFILE AND TEXTUREMAPUSING
+		// Create Texture resource with textureMapID
+
+		TextureLoader textureLoader;
+		textureLoader.file = pParams.textureFile[textureSlot];
+		textureLoader.textureType = TextureType(textureSlot);
+
+		TextureManager::Get()->AddResource(&textureLoader);
+		//TextureManager::Get()->GetResourceAtID(pParams.textureFile[textureSlot])->setTextureType(static_cast<TextureType>(textureSlot));
+
+		// Set if material is using each texture slot
+		m_textureFile[textureSlot] = pParams.textureFile[textureSlot];
+		m_textureMapUsing[textureSlot] = true;
+
+	}
 
 	// Create shader resource with shaderID
 	ShaderManager::Get()->AddResource(m_shaderID, "res/shaders/lightingPassTwo-vertex.glsl", "res/shaders/lightingPassTwo-fragment.glsl");
+
+	// DEBUG
+	for (int i = 0; i != MATERIAL_TEXTURE_SLOTS; i++)
+	{
+		PRINT_INFO("Texture: {0}", m_textureFile[i]);
+	}
 }
 
 
@@ -49,10 +64,10 @@ Material::~Material()
 void Material::BindMaterial(const glm::mat4& modelMat)
 {
 	// Bind each used texture
-	for (int i = static_cast<int>(TextureType::START_OF_TEXTURETYPE); i != static_cast<int>(TextureType::END_OF_TEXTURETYPE); i++)
+	for (int i = 0; i != MATERIAL_TEXTURE_SLOTS; i++)
 	{
-		if (m_textureMapUsing[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i])
-			TextureManager::Get()->BindResourceAtID(m_textureMapIDs[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i]);
+		if (m_textureFile[i] != NULL_TEXTURE)
+			TextureManager::Get()->BindResourceAtID(m_textureFile[i]);
 	}
 
 	// Bind the materials shader
@@ -74,7 +89,6 @@ void Material::BindMaterial(const glm::mat4& modelMat)
 	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.height", static_cast<int>(TextureType::HEIGHT));
 
 	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.specularShininess", 48.0f);
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.normalizeTex", m_bNormalMapNormalize);
 
 	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingEmission", m_textureMapUsing[static_cast<int>(TextureType::EMISSION)]);
 	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingNormal", m_textureMapUsing[static_cast<int>(TextureType::NORMAL)]);
@@ -148,10 +162,10 @@ void Material::BindMaterial(const glm::mat4& modelMat)
 void Material::UnbindMaterial()
 {
 	// Unbind each available texture
-	for (int i = static_cast<int>(TextureType::START_OF_TEXTURETYPE); i != static_cast<int>(TextureType::END_OF_TEXTURETYPE); i++)
+	for (int i = 0; i != MATERIAL_TEXTURE_SLOTS; i++)
 	{
-		if (m_textureMapUsing[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i])
-			TextureManager::Get()->UnbindResourceAtID(m_textureMapIDs[static_cast<int>(TextureType::START_OF_TEXTURETYPE) + i]);
+		if (m_textureMapUsing[i])
+			TextureManager::Get()->UnbindResourceAtID(m_textureFile[i]);
 	}
 	
 	ShaderManager::Get()->UnbindResourceAtID(m_shaderID);

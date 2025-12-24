@@ -15,7 +15,6 @@ struct Material
 	sampler2D height;
 	float specularShininess;
 
-	int normalizeTex;
 	bool usingNormal;
 	bool usingEmission;
 	bool usingHeight;

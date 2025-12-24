@@ -4,6 +4,11 @@
 
 #include <glm/mat4x4.hpp>
 
+struct ShaderLoader :
+	public IResourceLoader
+{
+};
+
 /// <summary>
 /// Encapsulates an OpenGL program to act as a shader
 /// </summary>
@@ -23,6 +28,7 @@ public:
 
 private:
 
+	virtual void	Parse(IResourceLoader* resourceLoader) {}
 	virtual void	Parse(const std::string& filepath) {}
 	virtual void	Parse(const std::string& vertexPath, const std::string& fragmentPath);
 	virtual void	Create();

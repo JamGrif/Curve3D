@@ -4,6 +4,11 @@
 
 struct Vertex;
 
+struct MeshLoader :
+	public IResourceLoader
+{
+};
+
 /// <summary>
 /// Encapsulates an OpenGL VBO and EBO buffer to act as a mesh
 /// </summary>
@@ -21,6 +26,7 @@ public:
 	 virtual void	Bind() override;
 	 virtual void	Unbind() override;
 
+	 virtual void	Parse(IResourceLoader* resourceLoader) {}
 	 virtual void	Parse(const std::string& filepath) override;
 	 virtual void	Parse(const std::string& firstFilepath, const std::string& secondFilepath) override {}
 

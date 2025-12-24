@@ -31,15 +31,20 @@ Texture::~Texture()
 /// 1 / 2 of texture creation
 /// Parse the .png file at filepath
 /// </summary>
-void Texture::Parse(const std::string& filepath)
+void Texture::Parse(IResourceLoader* resourceLoader)
 {
+	TextureLoader* tl = dynamic_cast<TextureLoader*>(resourceLoader);
+
+	m_resourceID = resourceLoader->file;
+	m_textureType = tl->textureType;
+
 	// Flips texture on Y-Axis
 	stbi_set_flip_vertically_on_load_thread(true);
 
 	// Automatically set the filepath of texture
-	std::string textureFilepath = TEXTURE_FILEPATH_PREFIX + filepath + TEXTURE_FILEPATH_SUFFIX;
+	m_resourceFilepath = TEXTURE_FILEPATH_PREFIX + resourceLoader->file + TEXTURE_FILEPATH_SUFFIX;
 
-	m_pTempBuffer = stbi_load(textureFilepath.c_str(), &m_textureWidth, &m_textureHeight, &m_textureBPP, DESIRED_TEXTURE_CHANNELS);
+	m_pTempBuffer = stbi_load(m_resourceFilepath.c_str(), &m_textureWidth, &m_textureHeight, &m_textureBPP, DESIRED_TEXTURE_CHANNELS);
 
 	// Check result
 	if (stbi_failure_reason() == STBI_ERROR_MESSAGE)
@@ -49,9 +54,6 @@ void Texture::Parse(const std::string& filepath)
 
 		return;
 	}
-
-	m_resourceID = filepath;
-	m_resourceFilepath = textureFilepath;
 }
 
 /// <summary>
