@@ -396,10 +396,8 @@ xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-m
   <ItemGroup>
     <None Include="config\imguiconfig.ini" />
     <None Include="Curve3D.aps" />
-    <None Include="res\shaders\lightingPassOne-fragment.glsl" />
-    <None Include="res\shaders\lightingPassOne-vertex.glsl" />
-    <None Include="res\shaders\lightingPassTwo-fragment.glsl" />
-    <None Include="res\shaders\lightingPassTwo-vertex.glsl" />
+    <None Include="res\shaders\lighting-fragment.glsl" />
+    <None Include="res\shaders\lighting-vertex.glsl" />
     <None Include="res\shaders\sky-fragment.glsl" />
     <None Include="res\shaders\sky-vertex.glsl" />
   </ItemGroup>
