@@ -6,15 +6,17 @@
 /// Tells a Texture object which slot in the shader to use
 /// Numbers correspond to index in the shader file
 /// </summary>
-enum class TextureType
+enum TextureType
 {
 	UNSET					= -1,
 	DIFFUSE					= 0,
 	SPECULAR				= 1,
-	EMISSION				= 2,
-	NORMAL					= 3,
-	HEIGHT					= 4,
+	NORMAL					= 2,
+	HEIGHT					= 3,
+	EMISSION				= 4,
 };
+
+
 
 struct TextureLoader :
 	public IResourceLoader
@@ -32,16 +34,13 @@ public:
 	Texture();
 	~Texture();
 
-	void			setTextureType(TextureType type) { m_textureType = type; }
 private:
 
 	virtual void	Bind() override;
 	virtual void	Unbind() override;
 
-	virtual void	Parse(IResourceLoader* resourceLoader) override;
-	virtual void	Parse(const std::string& filepath) {};
-	virtual void	Parse(const std::string& firstFilepath, const std::string& secondFilepath) {}
-	virtual void	Create() override;
+	virtual bool	Parse(IResourceLoader* resourceLoader) override;
+	virtual bool	Create() override;
 
 private:
 
@@ -51,7 +50,7 @@ private:
 	// sampler2D slot used in shader
 	TextureType		m_textureType;
 
-	// Temp storage during parsing and creation
+	// Temp storage between parse and create
 	unsigned char*	m_pTempBuffer;
 
 	// Ensures only the TextureManager can call functions of a texture object

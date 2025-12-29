@@ -28,10 +28,8 @@ public:
 
 private:
 
-	virtual void	Parse(IResourceLoader* resourceLoader) {}
-	virtual void	Parse(const std::string& filepath) {}
-	virtual void	Parse(const std::string& vertexPath, const std::string& fragmentPath);
-	virtual void	Create();
+	virtual bool	Parse(IResourceLoader* resourceLoader) override;
+	virtual bool	Create();
 
 	virtual void	Bind();
 	virtual void	Unbind();

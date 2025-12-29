@@ -26,7 +26,7 @@ Scene::~Scene()
 
 	TheMaterialManager::Instance()->ClearAllMaterials();
 
-	PRINT_INFO("SCENE->{0} has unloaded sucessfully", m_sceneFilename);
+	PRINT_GREEN("{0} has unloaded successfully", m_sceneFilename);
 }
 
 /// <summary>
@@ -34,7 +34,7 @@ Scene::~Scene()
 /// </summary>
 bool Scene::LoadScene()
 {
-	PRINT_INFO("SCENE->Attempting to load scene {0}", m_sceneFilename);
+	PRINT_WHITE("Attempting to load scene {0}", m_sceneFilename);
 
 	// Create scene essentials
 	m_sceneCamera = std::make_shared<SceneCamera>();
@@ -54,7 +54,7 @@ bool Scene::LoadScene()
 		model->SetModelPointers(m_sceneCamera);
 	}
 
-	PRINT_INFO("SCENE->{0} has loaded sucessfully", m_sceneFilename);
+	PRINT_GREEN("{0} has loaded successfully", m_sceneFilename);
 	return true;
 }
 

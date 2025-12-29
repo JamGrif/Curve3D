@@ -13,22 +13,23 @@ class SceneParser
 {
 public:
 	SceneParser();
-	~SceneParser() {};
+	~SceneParser() {}
 
 	bool ParseSceneFile(const std::string& sceneFilepath, SceneModels& sceneModels, std::shared_ptr<SceneLightManager>& sceneLightManager, std::shared_ptr<SceneSky>* sceneSky);
 
 private:
 
-	void ParseMaterialsNode(const TiXmlElement* pMaterialsElement);
-	void ParseModelsNode(const TiXmlElement* pModelElement, SceneModels& sceneModels);
-	void ParseLightsNode(const TiXmlElement* pLightsElement, std::shared_ptr<SceneLightManager>& sceneLightManager);
+	// Elements of .xml file
+	void ReadMaterialsElement(const TiXmlElement* pMaterialsElement);
+	void ReadModelsElement(const TiXmlElement* pModelElement, SceneModels& sceneModels);
+	void ReadLightsElement(const TiXmlElement* pLightsElement, std::shared_ptr<SceneLightManager>& sceneLightManager);
 
-	void ParseFirstHalfMaterials();
-	void ParseSecondHalfMaterials();
+	void CreateResourceEssentials();
+
+	void CreateMaterials();
 
 	void ParseBaseLight(const TiXmlElement* lightNode, std::shared_ptr<ILightLoaderParams> pParams);
 
 	typedef std::unordered_map<std::string, MaterialLoader> PendingMaterialPool;
-	PendingMaterialPool m_firstMatMap;
-	PendingMaterialPool m_secondMatMap;
+	PendingMaterialPool m_materialMap;
 };

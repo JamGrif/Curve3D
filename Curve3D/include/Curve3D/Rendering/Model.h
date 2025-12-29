@@ -5,7 +5,7 @@
 /// <summary>
 /// Model loading parameters which are passed to a Model object on construction to set initial values
 /// </summary>
-struct ModelLoaderParams
+struct ModelLoader
 {
 	std::string modelID;
 
@@ -23,7 +23,7 @@ struct ModelLoaderParams
 class Model
 {
 public:
-	Model(const ModelLoaderParams& pParams);
+	Model(const ModelLoader& pParams);
     ~Model();
 
 	void				UpdateModel();
@@ -47,6 +47,7 @@ private:
 private:
 
 	// Unique ID of model - generated when model is created
+	// Used by the UI / editor
 	std::string			m_modelID;
 
 	// For MeshManager - The mesh this model uses

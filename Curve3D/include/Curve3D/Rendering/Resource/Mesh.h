@@ -26,11 +26,9 @@ public:
 	 virtual void	Bind() override;
 	 virtual void	Unbind() override;
 
-	 virtual void	Parse(IResourceLoader* resourceLoader) {}
-	 virtual void	Parse(const std::string& filepath) override;
-	 virtual void	Parse(const std::string& firstFilepath, const std::string& secondFilepath) override {}
+	 virtual bool	Parse(IResourceLoader* resourceLoader) override;
 
-	 virtual void	Create() override;
+	 virtual bool	Create() override;
 
 private:
 

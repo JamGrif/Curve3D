@@ -33,11 +33,9 @@ public:
 
 private:
 
-	virtual void	Parse(IResourceLoader* resourceLoader) {}
-	virtual void	Parse(const std::string& facesFilepath);
-	virtual void	Parse(const std::string& firstFilepath, const std::string& secondFilepath) {}
+	virtual bool	Parse(IResourceLoader* resourceLoader);
 
-	virtual void	Create();
+	virtual bool	Create();
 
 	virtual void	Bind();
 	virtual void	Unbind();

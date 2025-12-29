@@ -8,7 +8,6 @@
 struct MaterialLoader
 {
 	std::string textureFile[MATERIAL_TEXTURE_SLOTS];
-
 };
 
 /// <summary>
@@ -20,14 +19,6 @@ class Material
 public:
 	Material(const MaterialLoader& pParams);
 	~Material();
-
-	/// <summary>
-	/// Return IDs of all textures the materials uses
-	/// </summary>
-	//const MaterialTextures& GetAllTextureIDs()
-	//{
-	//	return m_textureFile;
-	//}
 
 private:
 

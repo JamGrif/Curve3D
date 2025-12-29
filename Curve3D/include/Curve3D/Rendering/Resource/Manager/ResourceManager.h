@@ -1,6 +1,6 @@
 #pragma once
 
-// Classes that are managed through the ResourceManager
+// Classes managed through the ResourceManager
 #include "Rendering/Resource/Mesh.h"
 #include "Rendering/Resource/Texture.h"
 #include "Rendering/Resource/Cubemap.h"
@@ -15,56 +15,27 @@ class ResourceManager
 {
 public:
 
+	/// <summary>
+	/// 1 / 2 of resource creation
+	/// Adds a new resource and parses its data file
+	/// </summary>
 	bool AddResource(IResourceLoader* resourceLoader)
 	{
-		// Check if resource with ID already exists
+		// Check if resource using file already exists
 		if (m_resourcePool.find(resourceLoader->file) != m_resourcePool.end())
-			return false;
+			return true;
 
-		// Create and parse the resource file
+		// Create and parse the resource
 		std::shared_ptr<T> pResource = std::make_shared<T>();
-		pResource->Parse(resourceLoader);
+		if (!pResource->Parse(resourceLoader))
+		{
+			PRINT_RED("Parse() {0}", resourceLoader->file);
+			return false;
+		}
 
 		m_resourcePool.insert({ resourceLoader->file, pResource });
 
-		return true;
-	}
-
-	/// <summary>
-	/// 1 / 2 of resource creation
-	/// Adds a new resource and parses its data file
-	/// </summary>
-	bool AddResource(const ResourceFile& resourceID)
-	{
-		// Check if resource with ID already exists
-		if (m_resourcePool.find(resourceID) != m_resourcePool.end())
-			return false;
-
-		// Create and parse the resource file
-		std::shared_ptr<T> pResource = std::make_shared<T>();
-		pResource->Parse(resourceID);
-
-		m_resourcePool.insert({ resourceID, pResource });
-
-		return true;
-	}
-
-	/// <summary>
-	/// 1 / 2 of resource creation
-	/// Adds a new resource and parses its data file
-	/// </summary>
-	bool AddResource(const ResourceFile& resourceID, const std::string& vertexPath, const std::string& fragmentPath)
-	{
-		// Check if resource with ID already exists
-		if (m_resourcePool.find(resourceID) != m_resourcePool.end())
-			return false;
-
-		// Create and parse the resource file
-		std::shared_ptr<T> pResource = std::make_shared<T>();
-		pResource->Parse(vertexPath, fragmentPath);
-
-		m_resourcePool.insert({ resourceID, pResource });
-
+		PRINT_GREEN("Parse() {0}", resourceLoader->file);
 		return true;
 	}
 
@@ -78,7 +49,12 @@ public:
 		{
 			// If resource isn't already created, create it
 			if (!resourceObject->GetCreated())
-				resourceObject->Create();
+			{
+				if (resourceObject->Create())
+					PRINT_GREEN("Create() {0}", ResourceFile);
+				else
+					PRINT_RED("Create() {0}", ResourceFile);
+			}
 		}
 	}
 
@@ -88,9 +64,7 @@ public:
 	void BindResourceAtID(const ResourceFile& resourceID)
 	{
 		if (m_resourcePool.count(resourceID))
-		{
 			m_resourcePool.at(resourceID)->Bind();
-		}
 	}
 
 	/// <summary>
@@ -99,9 +73,7 @@ public:
 	void UnbindResourceAtID(const ResourceFile& resourceID)
 	{
 		if (m_resourcePool.count(resourceID))
-		{
 			m_resourcePool.at(resourceID)->Unbind();
-		}
 	}
 
 	/// <summary>
@@ -110,9 +82,8 @@ public:
 	std::shared_ptr<T> GetResourceAtID(const ResourceFile& resourceID)
 	{
 		if (m_resourcePool.count(resourceID))
-		{
 			return m_resourcePool.at(resourceID);
-		}
+
 		return {};
 	}
 

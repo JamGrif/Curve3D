@@ -8,51 +8,55 @@
 
 #include "glm\gtc\matrix_transform.hpp"
 
+std::string MISSING_TEXTURE_FILENAME2 = "missingtexture";
 
 Material::Material(const MaterialLoader& pParams)
-	:m_shaderID("lightingShader"),
+	:m_shaderID("lighting"),
 	m_textureMapUsing{ false, false, false, false, false },
 	m_pAppProjectionMatrix(OpenGLRenderer::Get()->GetProjectionMatrix()),
-	m_heightMapHeight(0.01f)
+	m_heightMapHeight(10.0f)
 {
-	// Go through MaterialLoaderParams and set each texture type that is used
+	// Step through each texture slot and attempt to load each required texture
 	for (int textureSlot = 0; textureSlot != MATERIAL_TEXTURE_SLOTS; textureSlot++)
 	{
 		// Check if texture slot is used in material
 		if (pParams.textureFile[textureSlot] == NULL_TEXTURE)
 		{
-			m_textureFile[textureSlot] = NULL_TEXTURE;
+			// Force missingtexture if empty diffuse slot
+			if (textureSlot == DIFFUSE)
+				m_textureFile[textureSlot] = MISSING_TEXTURE_FILENAME2;
+			else
+				m_textureFile[textureSlot] = NULL_TEXTURE;
+
 			continue;
 		}
 
-		//	BELOW IS WHERE YOU WANT TO RETURN TRUE OR FALSE WITH ADDRESOURCE TO CHECK IF ITS SUCCESSFULLY MADE.
-		// IF FALSE THEN NOT CREATE TEXTURE
-		// CAN PROBS MERGE M_TEXTUREFILE AND TEXTUREMAPUSING
-		// Create Texture resource with textureMapID
-
+		// Setup texture to load
 		TextureLoader textureLoader;
 		textureLoader.file = pParams.textureFile[textureSlot];
 		textureLoader.textureType = TextureType(textureSlot);
 
-		TextureManager::Get()->AddResource(&textureLoader);
-		//TextureManager::Get()->GetResourceAtID(pParams.textureFile[textureSlot])->setTextureType(static_cast<TextureType>(textureSlot));
-
-		// Set if material is using each texture slot
-		m_textureFile[textureSlot] = pParams.textureFile[textureSlot];
-		m_textureMapUsing[textureSlot] = true;
-
-	}
-
-	// Create shader resource with shaderID
-	ShaderManager::Get()->AddResource(m_shaderID, "res/shaders/lightingPassTwo-vertex.glsl", "res/shaders/lightingPassTwo-fragment.glsl");
-
-	// DEBUG
-	for (int i = 0; i != MATERIAL_TEXTURE_SLOTS; i++)
-	{
-		PRINT_INFO("Texture: {0}", m_textureFile[i]);
+		// Attempt to create texture for specified texture slot
+		if (!TextureManager::Get()->AddResource(&textureLoader))
+		{
+			// Failed to create texture, so decided whether to disable texture slot or force missingtexture if diffuse slot
+			if (textureLoader.textureType == DIFFUSE)
+			{
+				m_textureFile[textureSlot] = MISSING_TEXTURE_FILENAME2;
+				m_textureMapUsing[textureSlot] = true;
+			}
+			else
+			{
+				m_textureFile[textureSlot] = NULL_TEXTURE;
+			}
+		}
+		else
+		{
+			m_textureFile[textureSlot] = pParams.textureFile[textureSlot];
+			m_textureMapUsing[textureSlot] = true;
+		}
 	}
 }
-
 
 Material::~Material()
 {
@@ -82,17 +86,18 @@ void Material::BindMaterial(const glm::mat4& modelMat)
 	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("proj_matrix", m_pAppProjectionMatrix);
 
 	// Set the values of the fragment shader
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.diffuse", static_cast<int>(TextureType::DIFFUSE));
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.specular", static_cast<int>(TextureType::SPECULAR));
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.emission", static_cast<int>(TextureType::EMISSION));
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.normal", static_cast<int>(TextureType::NORMAL));
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.height", static_cast<int>(TextureType::HEIGHT));
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.diffuse", DIFFUSE);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.specular", SPECULAR);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.normal", NORMAL);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.height", HEIGHT);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.emission", EMISSION);
 
 	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.specularShininess", 48.0f);
 
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingEmission", m_textureMapUsing[static_cast<int>(TextureType::EMISSION)]);
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingNormal", m_textureMapUsing[static_cast<int>(TextureType::NORMAL)]);
-	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingHeight", m_textureMapUsing[static_cast<int>(TextureType::HEIGHT)]);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingSpecular", m_textureMapUsing[SPECULAR]);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingNormal", m_textureMapUsing[NORMAL]);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingHeight", m_textureMapUsing[HEIGHT]);
+	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.usingEmission", m_textureMapUsing[EMISSION]);
 
 	ShaderManager::Get()->GetResourceAtID(m_shaderID)->SetUniform("material.heightAmount", m_heightMapHeight);
 

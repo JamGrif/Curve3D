@@ -34,7 +34,7 @@ bool OpenGLRenderer::Init()
 	// GLFW
 	if (!glfwInit())
 	{
-		PRINT_ERROR("GLFW failed to initialize");
+		PRINT_RED("GLFW failed to initialize");
 		return false;
 	}
 
@@ -44,13 +44,13 @@ bool OpenGLRenderer::Init()
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
-		PRINT_ERROR("GLEW failed to initialize");
+		PRINT_RED("GLEW failed to initialize");
 		return false;
 	}
 
-	PRINT_TRACE("Vendor is {0}", glGetString(GL_VENDOR));
-	PRINT_TRACE("Renderer is {0}", glGetString(GL_RENDERER));
-	PRINT_TRACE("Version is {0}", glGetString(GL_VERSION));
+	//PRINT_TRACE("Vendor is {0}", glGetString(GL_VENDOR));
+	//PRINT_TRACE("Renderer is {0}", glGetString(GL_RENDERER));
+	//PRINT_TRACE("Version is {0}", glGetString(GL_VERSION));
 
 	// Depth Buffer
 	glCall(glEnable(GL_DEPTH_TEST));

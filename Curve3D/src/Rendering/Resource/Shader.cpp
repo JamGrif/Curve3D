@@ -44,7 +44,7 @@ static GLuint CompileShader(SHADER_TYPE ShaderType, const GLchar* source)
 
 		glCall(glDeleteShader(newShader));
 
-		PRINT_WARN("SHADER-> Failed to compile shader - {0}", infoLog);
+		PRINT_RED("SHADER-> Failed to compile shader - {0}", infoLog);
 		return 0;
 	}
 
@@ -83,7 +83,7 @@ static GLuint LinkShaders(GLuint firstShader, GLuint secondShader)
 
 		glCall(glDeleteProgram(newShaderProgram));
 
-		PRINT_WARN("SHADER-> Failed to link shader program - {0}", infoLog);
+		PRINT_RED("SHADER-> Failed to link shader program - {0}", infoLog);
 		return 0;
 	}
 
@@ -106,13 +106,23 @@ Shader::~Shader()
 /// 1 / 2 of shader creation
 /// Parse the .glsl shader file at vertexPath and fragmentPath
 /// </summary>
-void Shader::Parse(const std::string& vertexPath, const std::string& fragmentPath)
+bool Shader::Parse(IResourceLoader* resourceLoader)
 {
+	std::string shaderPrefix = "res/shaders/";
+	std::string vertexSuffix = "-vertex.glsl";
+	std::string fragmentSuffix = "-fragment.glsl";
+
+	std::string NEWvertexPath = shaderPrefix + resourceLoader->file + vertexSuffix;
+	std::string NEWfragmentPath = shaderPrefix + resourceLoader->file + fragmentSuffix;
+
+	//PRINT_INFO("Hello");
+	//PRINT_INFO("vp is {0} fp is {1}", NEWvertexPath, NEWfragmentPath);
+
 	try
 	{
 		// Open files
-		std::ifstream vShaderFile(vertexPath);
-		std::ifstream fShaderFile(fragmentPath);
+		std::ifstream vShaderFile(NEWvertexPath);
+		std::ifstream fShaderFile(NEWfragmentPath);
 
 		// Ensure ifstream objects can throw exceptions
 		vShaderFile.exceptions(std::ifstream::badbit);
@@ -132,15 +142,18 @@ void Shader::Parse(const std::string& vertexPath, const std::string& fragmentPat
 	}
 	catch (const std::ifstream::failure e)
 	{
-		PRINT_WARN("SHADER-> Failed to open and read shaders {0} , {1} with error {2}", vertexPath, fragmentPath, e.what());
+		PRINT_RED("SHADER-> Failed to open and read shaders {0} , {1} with error {2}", NEWvertexPath, NEWfragmentPath, e.what());
+		return false;
 	}
+
+	return true;
 }
 
 /// <summary>
 /// 2 / 2 of shader creation
 /// Use parsed shader data to create shader programs
 /// </summary>
-void Shader::Create()
+bool Shader::Create()
 {
 	// Compile the parsed shader file
 	GLuint vertex = CompileShader(SHADER_TYPE::VertexShader, vertexShaderCode.c_str());
@@ -150,6 +163,8 @@ void Shader::Create()
 	m_OpenGLResourceID = LinkShaders(vertex, fragment);
 
 	m_bIsCreated = true;
+
+	return true;
 }
 
 /// <summary>
@@ -229,7 +244,7 @@ int Shader::GetUniformLocation(const std::string& uniformName)
 	int uniformLocation = glGetUniformLocation(m_OpenGLResourceID, uniformName.c_str());
 
 	if (uniformLocation == FAILED_TO_FIND)
-		PRINT_WARN("SHADER-> Uniform location {0} does not exist", uniformName);
+		PRINT_YELLOW("SHADER-> Uniform location {0} does not exist", uniformName);
 	else
 		m_uniformLocationCache[uniformName] = uniformLocation;
 	
