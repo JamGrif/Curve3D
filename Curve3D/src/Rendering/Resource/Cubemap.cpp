@@ -48,7 +48,7 @@ bool Cubemap::Parse(IResourceLoader* resourceLoader)
 	for (unsigned int i = e_START_OF_CUBEFACE_ENUM; i < e_END_OF_CUBEFACE_ENUM; i++)
 	{
 		// Flips texture on Y-Axis
-		stbi_set_flip_vertically_on_load_thread(0);
+		stbi_set_flip_vertically_on_load(false);
 
 		m_localbuffer[i] = stbi_load(facesFilepathArray[i].c_str(), &m_width[i], &m_height[i], &m_BPP[i], 0);
 
@@ -63,19 +63,6 @@ bool Cubemap::Parse(IResourceLoader* resourceLoader)
 			PRINT_RED("CUBEMAP-> {0} failed to parse cubemap face", facesFilepathArray[i]);
 			return false;
 		}
-
-		//// Check if file loaded successfully
-		//if (stbi_failure_reason() == "can't fopen")
-		//{
-		//	// Free any successfully created faces
-		//	for (unsigned int j = e_START_OF_CUBEFACE_ENUM; j < e_END_OF_CUBEFACE_ENUM; j++)
-		//	{
-		//		stbi_image_free(m_localbuffer[i]);
-		//	}
-		//
-		//	PRINT_WARN("CUBEMAP-> {0} failed to parse cubemap face", facesFilepathArray[i]);
-		//	return false;
-		//}
 	}
 
 	return true;

@@ -10,12 +10,26 @@
 #include "Rendering/OpenGLRenderer.h"
 #include "Scene/SceneCamera.h"
 
+std::string MISSING_MESH_FILENAME2 = "missingmesh";
+
+
 Model::Model(const ModelLoader& pParams)
-	:m_modelID(pParams.modelID), m_materialID(pParams.materialName), m_meshID(pParams.meshFile),
+	:m_modelID(pParams.modelID), m_materialID(pParams.materialName),
 	m_position(pParams.position), m_rotation(pParams.rotation), m_scale(pParams.scale),
 	m_mMat{ 1.0f }, m_vMat{ 1.0f }, m_tMat{ 1.0f }, m_rMat{ 1.0f }, m_sMat{ 1.0f },
 	m_programProjectionMatrix(TheOpenGLRenderer::Get()->GetProjectionMatrix())
 {
+	// Setup mesh to load
+	MeshLoader meshLoader;
+	meshLoader.file = pParams.meshFile;
+
+	ResourceID meshID = MeshManager::Get()->AddResource(&meshLoader);
+	if (meshID == UNSET_RESOURCE_ID)
+	{
+		m_meshResourceID = MeshManager::Get()->GetErrorResourceID();
+	}
+	else
+		m_meshResourceID = meshID;
 }
 
 Model::~Model()
@@ -37,13 +51,13 @@ void Model::DrawModel()
 {
 	// Bind material and mesh
 	TheMaterialManager::Instance()->BindMaterialAtID(m_materialID, m_mMat);
-	MeshManager::Get()->BindResourceAtID(m_meshID);
+	MeshManager::Get()->BindResourceAtID(m_meshResourceID);
 	
 	// Draw ----
-	TheOpenGLRenderer::Get()->Draw(MeshManager::Get()->GetResourceAtID(m_meshID)->GetIndicesCount());
+	TheOpenGLRenderer::Get()->Draw(MeshManager::Get()->GetResourceAtID(m_meshResourceID)->GetIndicesCount());
 
 	// Unbind material and mesh
-	MeshManager::Get()->UnbindResourceAtID(m_meshID);
+	MeshManager::Get()->UnbindResourceAtID(m_meshResourceID);
 	TheMaterialManager::Instance()->UnbindMaterialAtID(m_materialID);
 }
 

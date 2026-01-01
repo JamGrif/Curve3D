@@ -4,7 +4,7 @@
 IResourceLoader::~IResourceLoader() {}
 
 IResource::IResource()
-	:m_OpenGLResourceID(-1), m_bIsCreated(false)
+	:m_OpenGLResourceID(-1), m_bIsCreated(false), m_resourceID(UNSET_RESOURCE_ID)
 {
 }
 

@@ -55,14 +55,14 @@ Mesh::~Mesh()
 /// </summary>
 bool Mesh::Parse(IResourceLoader* resourceLoader)
 {
-	std::string meshFilepath = MESH_FILEPATH_PREFIX + resourceLoader->file + MESH_FILEPATH_SUFFIX;
+	m_resourceFilepath = MESH_FILEPATH_PREFIX + resourceLoader->file + MESH_FILEPATH_SUFFIX;
 
 	Assimp::Importer assimpImporter;
-	const aiScene* assimpScene = assimpImporter.ReadFile(meshFilepath, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+	const aiScene* assimpScene = assimpImporter.ReadFile(m_resourceFilepath, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
 	if (!assimpScene || assimpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !assimpScene->mRootNode)
 	{
-		PRINT_RED("MESH-> {0} failed to load", meshFilepath);
+		m_errorMessage = "Failed to parse mesh at " + m_resourceFilepath;
 		return false;
 	}
 
@@ -108,7 +108,6 @@ bool Mesh::Parse(IResourceLoader* resourceLoader)
 		}
 	}
 
-	m_resourceFilepath = meshFilepath;
 	return true;
 }
 

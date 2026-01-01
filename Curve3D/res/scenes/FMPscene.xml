@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<scene skyid="default">
+<scene SkyFile="default">
 	<materials>
 		<material Name="grass" DiffuseFile="grass_diff" SpecularFile="grass_spec" NormalFile="null" HeightFile="null" EmissionFile="null"/>
 		<material Name="shed" DiffuseFile="shed_diff" SpecularFile="shed_spec" NormalFile="shed_norm" HeightFile="null" EmissionFile="null"/>

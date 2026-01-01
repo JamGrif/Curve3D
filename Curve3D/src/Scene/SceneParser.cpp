@@ -16,23 +16,22 @@ namespace
 	constexpr auto SCENE_FILEPATH_PREFIX = "res/scenes/";
 	constexpr auto SCENE_FILEPATH_SUFFIX = ".xml";
 
-	constexpr auto SKY_ATTRIBUTE = "skyid";
-
 	// Scene Elements
 	constexpr auto MATERIALS_ELEMENT = "materials";
 	constexpr auto LIGHTS_ELEMENT = "lights";
 	constexpr auto MODELS_ELEMENT = "models";
 
 	// Scene Attributes
-
+	constexpr auto SKY_ATTRIBUTE = "SkyFile";
 
 	// Material Attributes
+	constexpr auto MATERIAL_NAME = "Name";
+	constexpr auto MATERIAL_DIFFUSE_FILE = "DiffuseFile";
 
 	// Light Attributes
 
 
 	// Model Attributes
-
 
 
 }
@@ -49,7 +48,7 @@ SceneParser::SceneParser()
 /// <summary>
 /// Parse the .xml scene file at sceneFilepath and fill the SceneModels vector, create all lights through the SceneLightManager and create the sky cubemap at sceneSky
 /// </summary>
-bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& sceneModels, std::shared_ptr<SceneLightManager>& sceneLightManager, std::shared_ptr<SceneSky>* sceneSky)
+bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& sceneModels, std::shared_ptr<SceneLightManager>& sceneLightManager, std::shared_ptr<SceneSky> sceneSky)
 {
 	TiXmlDocument sceneDocument;
 
@@ -93,12 +92,7 @@ bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& 
 	// Parse all the assets used in scene
 	PerformanceTimer parseTimer("Asset Parsing");
 
-	// Create sky using skyid as the cubemap filename
-	*sceneSky = std::make_shared<SceneSky>(pFileRoot->Attribute(SKY_ATTRIBUTE));
-	ResourceFile m_tempSkyCubemapID = pFileRoot->Attribute(SKY_ATTRIBUTE);
-	CubemapLoader cubemapLoader;
-	cubemapLoader.file = m_tempSkyCubemapID;
-	CubemapManager::Get()->AddResource(&cubemapLoader);
+	sceneSky->SetSkyID(pFileRoot->Attribute(SKY_ATTRIBUTE));
 
 	CreateResourceEssentials();
 
@@ -107,12 +101,7 @@ bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& 
 	ReadModelsElement(pModelElement, sceneModels);
 	ReadLightsElement(pLightElement, sceneLightManager);
 
-
 	CreateMaterials();
-
-	
-
-
 
 	parseTimer.Stop();
 
@@ -249,10 +238,6 @@ void SceneParser::ReadModelsElement(const TiXmlElement* pModelElement, SceneMode
 
 		sceneModels.emplace_back(std::make_shared<Model>(tempLoaderParams));
 
-		// Use the meshID to create initial mesh
-		MeshLoader meshLoader;
-		meshLoader.file = tempLoaderParams.meshFile;
-		MeshManager::Get()->AddResource(&meshLoader);
 	}
 }
 
@@ -265,18 +250,26 @@ void SceneParser::CreateResourceEssentials()
 	TextureLoader errorTextureLoader;
 	errorTextureLoader.file = MISSING_TEXTURE_FILENAME1;
 	errorTextureLoader.textureType = DIFFUSE;
-	TextureManager::Get()->AddResource(&errorTextureLoader);
+	int textureErrorID = TextureManager::Get()->AddResource(&errorTextureLoader);
+	TextureManager::Get()->SetErrorResourceID(textureErrorID);
+	PRINT_RED("texture errorid is {0}", textureErrorID);
 
 	// Create missingmesh
-	// -
 	MeshLoader errorMeshLoader;
 	errorMeshLoader.file = MISSING_MESH_FILENAME;
 	MeshManager::Get()->AddResource(&errorMeshLoader);
+	int meshErrorID = MeshManager::Get()->AddResource(&errorMeshLoader);
+	MeshManager::Get()->SetErrorResourceID(meshErrorID);
+	PRINT_RED("mesh errorid is {0}", meshErrorID);
 
-	// Create shader resource with shaderID
-	ShaderLoader shaderLoader;
-	shaderLoader.file = "lighting";
-	ShaderManager::Get()->AddResource(&shaderLoader);
+	// Create essential shaders
+	ShaderLoader lightShader;
+	lightShader.file = "lighting";
+	ShaderManager::Get()->AddResource(&lightShader);
+
+	ShaderLoader skyShader;
+	skyShader.file = "sky";
+	ShaderManager::Get()->AddResource(&skyShader);
 }
 
 void SceneParser::CreateMaterials()

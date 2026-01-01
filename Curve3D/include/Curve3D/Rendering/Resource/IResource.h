@@ -35,10 +35,13 @@ public:
 	const ResourceFile&	GetResourceID() { return m_resourceFile; }
 	const std::string&	GetFilepath() { return m_resourceFilepath; }
 
+	const std::string& GetError() { return m_errorMessage; }
+
 protected:
 
 	// ID used by the ResourceManager to retrieve this object
 	ResourceFile			m_resourceFile;
+	ResourceID				m_resourceID;
 
 	// Internal OpenGL index for resource
 	OpenGLIndex			m_OpenGLResourceID;
@@ -46,4 +49,7 @@ protected:
 	bool				m_bIsCreated;
 
 	std::string			m_resourceFilepath;
+
+	// If the resources fails to get created or parsed, the reason will be placed into m_errorMessage
+	std::string m_errorMessage;
 };

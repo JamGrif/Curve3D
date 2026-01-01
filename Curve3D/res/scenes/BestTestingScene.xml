@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<scene skyid="default">
+<scene SkyFile="default">
 	<materials>
 			<material Name="JustDiffuse" DiffuseFile="woodWall_diff" SpecularFile="null" NormalFile="null" HeightFile="null" EmissionFile="null"/>
 			<material Name="AllMaterials" DiffuseFile="lava_diff" SpecularFile="lava_spec" NormalFile="lava_norm" HeightFile="woodWall_height" EmissionFile="matrix_emis"/>
-
+			<material Name="BarrelMaterial" DiffuseFile="a" SpecularFile="skullGround_spec" NormalFile="skullGround_norm" HeightFile="null" EmissionFile="null"/>
 	</materials>
 	<lights>
 		<light type="direction" ambR="0.5" ambG="0.5" ambB="0.5" difR="0.8" difG="0.8" difB="0.8" speR="0.3" speG="0.3" speB="0.3" dirX="-2.0" dirY="-2.0" dirZ="-1.0"/>
 		<light type="point" ambR="0.2" ambG="0.2" ambB="0.2" difR="1.0" difG="1.0" difB="1.0" speR="0.4" speG="0.4" speB="0.4" posX="0.0	" posY="3.0" posZ="0.0"/>
 	</lights>
 	<models>
-		<model MaterialName="AllMaterials" MeshFile="cube" posX="3.0" posY="-1.5" posZ="3.0" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
-		<model MaterialName="AllMaterials" MeshFile="cube" posX="-3.0" posY="-1.5" posZ="3.0	" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
-		<model MaterialName="AllMaterials" MeshFile="cube" posX="3.0	" posY="-1.5" posZ="-3.0" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
+		<model MaterialName="BarrelMaterial" MeshFile="barrel" posX="1.0" posY="-1.5" posZ="-10.0" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="2.0" scaleY="2.0" scaleZ="2.0"/>
+		<model MaterialName="AllMaterials" MeshFile="amesh" posX="3.0" posY="-1.5" posZ="3.0" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
+		<model MaterialName="AllMaterials" MeshFile="plane" posX="-3.0" posY="-1.5" posZ="3.0	" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
+		<model MaterialName="AllMaterials" MeshFile="plane" posX="3.0	" posY="-1.5" posZ="-3.0" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
 		<model MaterialName="AllMaterials" MeshFile="plane" posX="-3.0" posY="-1.5" posZ="-3.0" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
 		<model MaterialName="AllMaterials" MeshFile="plane" posX="9.0	" posY="-1.5" posZ="9.0	" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>
 		<model MaterialName="AllMaterials" MeshFile="plane" posX="9.0	" posY="-1.5" posZ="3.0	" rotX="0.0" rotY="0.0" rotZ="0.0" scaleX="1.0" scaleY="1.0" scaleZ="1.0"/>

@@ -37,7 +37,7 @@ public:
 	const Vector3D&		GetRotation() const { return m_rotation; }
 	const Vector3D&		GetScale() const { return m_scale; }
 
-	const ResourceFile&	GetMeshID() const { return m_meshID; }
+	const ResourceID&	GetMeshID() const { return m_meshResourceID; }
 	const std::string&	GetMaterialID() const { return m_materialID; }
 
 private:
@@ -51,7 +51,8 @@ private:
 	std::string			m_modelID;
 
 	// For MeshManager - The mesh this model uses
-	ResourceFile			m_meshID;
+	//ResourceFile			m_meshID;
+	ResourceID				m_meshResourceID;
 
 	// For MaterialManager - The material this model uses
 	std::string			m_materialID;

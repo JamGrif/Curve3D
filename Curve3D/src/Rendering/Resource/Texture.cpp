@@ -37,7 +37,7 @@ bool Texture::Parse(IResourceLoader* resourceLoader)
 	m_textureType = tl->textureType;
 
 	// Flips texture on Y-Axis
-	//stbi_set_flip_vertically_on_load_thread(false);
+	stbi_set_flip_vertically_on_load(true);
 
 	m_resourceFilepath = TEXTURE_FILEPATH_PREFIX + resourceLoader->file + TEXTURE_FILEPATH_SUFFIX;
 
@@ -46,7 +46,7 @@ bool Texture::Parse(IResourceLoader* resourceLoader)
 	if (!m_pTempBuffer)
 	{
 		stbi_image_free(m_pTempBuffer);
-
+		m_errorMessage = "Failed to parse texture at " + m_resourceFilepath;
 		return false;
 	}
 

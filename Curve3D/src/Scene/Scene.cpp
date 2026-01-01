@@ -39,10 +39,11 @@ bool Scene::LoadScene()
 	// Create scene essentials
 	m_sceneCamera = std::make_shared<SceneCamera>();
 	m_sceneLightManager = std::make_shared<SceneLightManager>();
+	m_sceneSky = std::make_shared<SceneSky>();
 
 	// Parse the XML scene file to create scene models and resources
 	SceneParser sceneParser;
-	if (!sceneParser.ParseSceneFile(m_sceneFilename, m_sceneModels, m_sceneLightManager, &m_sceneSky))
+	if (!sceneParser.ParseSceneFile(m_sceneFilename, m_sceneModels, m_sceneLightManager, m_sceneSky))
 		return false;
 
 	// Setup object pointers with scene data

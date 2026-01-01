@@ -33,12 +33,8 @@ private:
 	std::string		m_shaderID;
 
 	// Filename of the texture in texture slot
-	typedef std::array<ResourceFile, MATERIAL_TEXTURE_SLOTS> MaterialTextures;
-	MaterialTextures m_textureFile;
-
-	// Is the texture slot used or not
-	typedef std::array<bool, MATERIAL_TEXTURE_SLOTS> MaterialUsingTextures;
-	MaterialUsingTextures m_textureMapUsing;
+	typedef std::array<ResourceID, MATERIAL_TEXTURE_SLOTS> MaterialTextures;
+	MaterialTextures m_materialTextures;
 
 	// Rendering data
 	float			m_heightMapHeight;
