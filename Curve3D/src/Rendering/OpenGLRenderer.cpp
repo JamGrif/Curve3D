@@ -34,7 +34,7 @@ bool OpenGLRenderer::Init()
 	// GLFW
 	if (!glfwInit())
 	{
-		PRINT_ERROR("GLFW failed to initialize");
+		PRINT_RED("GLFW failed to initialize");
 		return false;
 	}
 
@@ -44,13 +44,13 @@ bool OpenGLRenderer::Init()
 	glewExperimental = GL_TRUE;
 	if (glewInit() != GLEW_OK)
 	{
-		PRINT_ERROR("GLEW failed to initialize");
+		PRINT_RED("GLEW failed to initialize");
 		return false;
 	}
 
-	PRINT_TRACE("Vendor is {0}", glGetString(GL_VENDOR));
-	PRINT_TRACE("Renderer is {0}", glGetString(GL_RENDERER));
-	PRINT_TRACE("Version is {0}", glGetString(GL_VERSION));
+	//PRINT_TRACE("Vendor is {0}", glGetString(GL_VENDOR));
+	//PRINT_TRACE("Renderer is {0}", glGetString(GL_RENDERER));
+	//PRINT_TRACE("Version is {0}", glGetString(GL_VERSION));
 
 	// Depth Buffer
 	glCall(glEnable(GL_DEPTH_TEST));
@@ -72,8 +72,9 @@ bool OpenGLRenderer::Init()
 	glCall(glBindVertexArray(m_appVAO));
 
 	// Create the apps Frame buffers
-	m_pSceneFilterFramebuffer = std::make_unique<OpenGLFramebuffer>(false);
-	m_pSceneMSAAFrameBuffer = std::make_unique<OpenGLFramebuffer>(true);
+	//m_pSceneMSAAFrameBuffer = std::make_unique<OpenGLFramebuffer>(true);
+
+	// FRAMEBUFFER STUFF
 
 	return true;
 }
@@ -94,37 +95,20 @@ bool OpenGLRenderer::Clean()
 
 /// <summary>
 /// Prepare the application to render a frame
-/// Clear rendering buffers, poll GLFW events and bind the correct framebuffer
+/// Clear rendering buffers, poll GLFW events
 /// </summary>
 void OpenGLRenderer::StartOfFrame() const
 {
 	// Clear the screen buffers
 	glCall(glClear(GL_DEPTH_BUFFER_BIT)); 
 	glCall(glfwPollEvents());
-
-	// Bind MSAA for object drawing
-	if (m_pSceneMSAAFrameBuffer)
-		m_pSceneMSAAFrameBuffer->BindFramebuffer();
 }
 
 /// <summary>
 /// Finalize the applications rendering of a frame
-/// Copy data to correct framebuffer and swap the screen buffers
 /// </summary>
 void OpenGLRenderer::EndOfFrame() const
 {
-	// Reads from the MSAA buffer and writes it to the Filter buffer
-	if (m_pSceneMSAAFrameBuffer && m_pSceneFilterFramebuffer)
-	{
-		m_pSceneMSAAFrameBuffer->BindReadFramebuffer();
-		m_pSceneFilterFramebuffer->BindWriteFramebuffer();
-		m_pSceneMSAAFrameBuffer->CopyToFramebuffer();
-		m_pSceneMSAAFrameBuffer->UnbindFramebuffer();
-
-		// Draw screen filter to buffer
-		m_pSceneFilterFramebuffer->Draw();
-	}
-
 	glCall(glfwSwapBuffers(TheOpenGLWindow::Get()->GetGLFWWindow()));
 }
 
@@ -145,40 +129,4 @@ void OpenGLRenderer::DrawCubemap(size_t vertexCount) const
 	glCall(glDepthFunc(GL_LEQUAL));
 	glCall(glDrawArrays(GL_TRIANGLES, NULL, static_cast<GLsizei>(vertexCount)));
 	glCall(glDepthFunc(GL_LESS));
-}
-
-/// <summary>
-/// Uses bound tessellation shader objects to render
-/// </summary>
-void OpenGLRenderer::DrawTerrain(size_t vertexCount) const
-{
-	glCall(glPatchParameteri(GL_PATCH_VERTICES, static_cast<GLsizei>(vertexCount)));
-	glCall(glDrawArrays(GL_PATCHES, NULL, static_cast<GLsizei>(vertexCount)));
-}
-
-/// <summary>
-/// Changes the screen filer applied
-/// </summary>
-void OpenGLRenderer::SetScreenFilter(ScreenFilter newFilter)
-{
-	switch (newFilter)
-	{
-	case ScreenFilter::Default:
-		m_pSceneFilterFramebuffer->SetFrameFilter(ScreenFilter::Default);
-		break;
-	case ScreenFilter::Inverse:
-		m_pSceneFilterFramebuffer->SetFrameFilter(ScreenFilter::Inverse);
-		break;
-	case ScreenFilter::Greyscale:
-		m_pSceneFilterFramebuffer->SetFrameFilter(ScreenFilter::Greyscale);
-		break;
-	case ScreenFilter::EdgeDetection:
-		m_pSceneFilterFramebuffer->SetFrameFilter(ScreenFilter::EdgeDetection);
-		break;
-	case ScreenFilter::Weird:
-		m_pSceneFilterFramebuffer->SetFrameFilter(ScreenFilter::Weird);
-		break;
-	default:
-		PRINT_WARN("Specified filterNumber is out of range:{0}", static_cast<int>(newFilter));
-	};
 }

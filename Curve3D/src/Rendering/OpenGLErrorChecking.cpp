@@ -18,7 +18,7 @@ bool GLLogCall(const char* function, const char* file, int line)
 {
 	while (GLenum error = glGetError())
 	{
-		PRINT_ERROR("OpenGL-> gl function call failed with error {0}. Function: {1}, File: {2}:{3},", error, function, file, line);
+		PRINT_RED("OpenGL-> gl function call failed with error {0}. Function: {1}, File: {2}:{3},", error, function, file, line);
 		return false;
 	}
 	return true;

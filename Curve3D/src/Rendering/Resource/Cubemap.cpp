@@ -31,29 +31,28 @@ Cubemap::~Cubemap()
 /// 1 / 2 of cubemap creation
 /// Parse the .png file of each cubemap face at filepath
 /// </summary>
-void Cubemap::Parse(const std::string& facesFilepath)
+bool Cubemap::Parse(IResourceLoader* resourceLoader)
 {
 	// Automatically set the filepath of each cubemap face
 	CubemapFaces facesFilepathArray =
 	{
-		CUBEMAP_FILEPATH_PREFIX + facesFilepath + CUBEMAP_FILEPATH_SUFFIX_RIGHT,
-		CUBEMAP_FILEPATH_PREFIX + facesFilepath + CUBEMAP_FILEPATH_SUFFIX_LEFT,
-		CUBEMAP_FILEPATH_PREFIX + facesFilepath + CUBEMAP_FILEPATH_SUFFIX_TOP,
-		CUBEMAP_FILEPATH_PREFIX + facesFilepath + CUBEMAP_FILEPATH_SUFFIX_BOTTOM,
-		CUBEMAP_FILEPATH_PREFIX + facesFilepath + CUBEMAP_FILEPATH_SUFFIX_FRONT,
-		CUBEMAP_FILEPATH_PREFIX + facesFilepath + CUBEMAP_FILEPATH_SUFFIX_BACK,
+		CUBEMAP_FILEPATH_PREFIX + resourceLoader->file + CUBEMAP_FILEPATH_SUFFIX_RIGHT,
+		CUBEMAP_FILEPATH_PREFIX + resourceLoader->file + CUBEMAP_FILEPATH_SUFFIX_LEFT,
+		CUBEMAP_FILEPATH_PREFIX + resourceLoader->file + CUBEMAP_FILEPATH_SUFFIX_TOP,
+		CUBEMAP_FILEPATH_PREFIX + resourceLoader->file + CUBEMAP_FILEPATH_SUFFIX_BOTTOM,
+		CUBEMAP_FILEPATH_PREFIX + resourceLoader->file + CUBEMAP_FILEPATH_SUFFIX_FRONT,
+		CUBEMAP_FILEPATH_PREFIX + resourceLoader->file + CUBEMAP_FILEPATH_SUFFIX_BACK,
 	};
 
 
 	for (unsigned int i = e_START_OF_CUBEFACE_ENUM; i < e_END_OF_CUBEFACE_ENUM; i++)
 	{
 		// Flips texture on Y-Axis
-		stbi_set_flip_vertically_on_load_thread(0);
+		stbi_set_flip_vertically_on_load(false);
 
 		m_localbuffer[i] = stbi_load(facesFilepathArray[i].c_str(), &m_width[i], &m_height[i], &m_BPP[i], 0);
 
-		// Check if file loaded successfully
-		if (stbi_failure_reason() == "can't fopen")
+		if (!m_localbuffer[i])
 		{
 			// Free any successfully created faces
 			for (unsigned int j = e_START_OF_CUBEFACE_ENUM; j < e_END_OF_CUBEFACE_ENUM; j++)
@@ -61,17 +60,19 @@ void Cubemap::Parse(const std::string& facesFilepath)
 				stbi_image_free(m_localbuffer[i]);
 			}
 
-			PRINT_WARN("CUBEMAP-> {0} failed to parse cubemap face", facesFilepathArray[i]);
-			return;
+			PRINT_RED("CUBEMAP-> {0} failed to parse cubemap face", facesFilepathArray[i]);
+			return false;
 		}
 	}
+
+	return true;
 }
 
 /// <summary>
 /// 2 / 2 of cubemap creation
 /// Use parsed cubemap face data to create OpenGL cubemap buffer
 /// </summary>
-void Cubemap::Create()
+bool Cubemap::Create()
 {
 	// Generate texture buffer
 	glCall(glGenTextures(1, &m_OpenGLResourceID));
@@ -97,6 +98,8 @@ void Cubemap::Create()
 	glCall(glBindTexture(GL_TEXTURE_CUBE_MAP, NO_CUBEMAP));
 
 	m_bIsCreated = true;
+
+	return true;
 }
 
 /// <summary>
@@ -116,10 +119,3 @@ void Cubemap::Unbind()
 	glCall(glBindTexture(GL_TEXTURE_CUBE_MAP, NO_CUBEMAP));
 }
 
-/// <summary>
-/// What the cubemap will do when its reset
-/// Unused in this class
-/// </summary>
-void Cubemap::Reset()
-{
-}

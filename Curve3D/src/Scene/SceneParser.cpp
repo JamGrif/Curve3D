@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "Scene/SceneParser.h"
 
-#include <thread>
-
 #include "tinyXML/tinyxml.h"	// Read the level data
 
 #include "Scene/SceneSky.h"
@@ -11,16 +9,37 @@
 #include "Rendering/Resource/Manager/ResourceManager.h"
 #include "Rendering/Model.h"
 
-static constexpr uint8_t STRCMP_SUCCESS = 0;
+namespace
+{
+	constexpr uint8_t STRCMP_SUCCESS = 0;
 
-static const std::string SCENE_FILEPATH_PREFIX = "res/scenes/";
-static const std::string SCENE_FILEPATH_SUFFIX = ".xml";
+	constexpr auto SCENE_FILEPATH_PREFIX = "res/scenes/";
+	constexpr auto SCENE_FILEPATH_SUFFIX = ".xml";
 
-static const char* SKY_ATTRIBUTE = "skyid";
+	// Scene Elements
+	constexpr auto MATERIALS_ELEMENT = "materials";
+	constexpr auto LIGHTS_ELEMENT = "lights";
+	constexpr auto MODELS_ELEMENT = "models";
 
-static const char* MATERIALS_ELEMENT = "materials";
-static const char* LIGHTS_ELEMENT = "lights";
-static const char* MODELS_ELEMENT = "models";
+	// Scene Attributes
+	constexpr auto SKY_ATTRIBUTE = "SkyFile";
+
+	// Material Attributes
+	constexpr auto MATERIAL_NAME = "Name";
+	constexpr auto MATERIAL_DIFFUSE_FILE = "DiffuseFile";
+
+	// Light Attributes
+
+
+	// Model Attributes
+
+
+}
+
+// temp
+
+std::string MISSING_TEXTURE_FILENAME1 = "missingtexture";
+std::string MISSING_MESH_FILENAME = "missingmesh";
 
 SceneParser::SceneParser()
 {
@@ -29,23 +48,19 @@ SceneParser::SceneParser()
 /// <summary>
 /// Parse the .xml scene file at sceneFilepath and fill the SceneModels vector, create all lights through the SceneLightManager and create the sky cubemap at sceneSky
 /// </summary>
-bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& sceneModels, std::shared_ptr<SceneLightManager>& sceneLightManager, std::shared_ptr<SceneSky>* sceneSky)
+bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& sceneModels, std::shared_ptr<SceneLightManager>& sceneLightManager, std::shared_ptr<SceneSky> sceneSky)
 {
-	TiXmlDocument levelDocument;
+	TiXmlDocument sceneDocument;
 
 	// Load scene XML file and check status
-	if (!levelDocument.LoadFile(SCENE_FILEPATH_PREFIX + sceneFilepath + SCENE_FILEPATH_SUFFIX, TIXML_ENCODING_UTF8))
+	if (!sceneDocument.LoadFile(SCENE_FILEPATH_PREFIX + sceneFilepath + SCENE_FILEPATH_SUFFIX, TIXML_ENCODING_UTF8))
 	{
-		PRINT_TRACE("{0}", levelDocument.ErrorDesc());
+		PRINT_RED("{0}", sceneDocument.ErrorDesc());
 		return false;
 	}
 
 	// Store <scene> node
-	TiXmlElement* pFileRoot = levelDocument.RootElement();
-
-	// Create sky using skyid as the cubemap filename
-	*sceneSky = std::make_shared<SceneSky>(pFileRoot->Attribute(SKY_ATTRIBUTE));
-	ResourceID m_tempSkyCubemapID = pFileRoot->Attribute(SKY_ATTRIBUTE);
+	TiXmlElement* pFileRoot = sceneDocument.RootElement();
 
 	const TiXmlElement* pMaterialElement = nullptr, * pLightElement = nullptr, * pModelElement = nullptr;
 
@@ -74,27 +89,19 @@ bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& 
 		}
 	}
 
-	//PRINT_TRACE("number of threads {0}", std::thread::hardware_concurrency());
-
 	// Parse all the assets used in scene
 	PerformanceTimer parseTimer("Asset Parsing");
 
-	ParseMaterialsNode(pMaterialElement);
+	sceneSky->SetSkyID(pFileRoot->Attribute(SKY_ATTRIBUTE));
 
-	// Load all textures and meshes concurrently
-	std::thread	firstMaterialThread(&SceneParser::ParseFirstHalfMaterials, this);
-	std::thread secondMaterialThread(&SceneParser::ParseSecondHalfMaterials, this);
-	std::thread modelThread(&SceneParser::ParseModelsNode, this, std::ref(pModelElement), std::ref(sceneModels));
+	CreateResourceEssentials();
 
-	firstMaterialThread.join();
-	secondMaterialThread.join();
-	modelThread.join();
+	// Parse each element of the scene file
+	ReadMaterialsElement(pMaterialElement);
+	ReadModelsElement(pModelElement, sceneModels);
+	ReadLightsElement(pLightElement, sceneLightManager);
 
-	// Add scene lights to the light manager
-	ParseLightsNode(pLightElement, sceneLightManager);
-
-	// Add the cubemap that the Skybox will use
-	CubemapManager::Get()->AddResource(m_tempSkyCubemapID);
+	CreateMaterials();
 
 	parseTimer.Stop();
 
@@ -114,10 +121,8 @@ bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& 
 /// <summary>
 /// Parse the <materials> node
 /// </summary>
-void SceneParser::ParseMaterialsNode(const TiXmlElement* pMaterialsElement)
+void SceneParser::ReadMaterialsElement(const TiXmlElement* pMaterialsElement)
 {
-	bool bInsertInFirst = true;
-
 	// Loop through all elements of <materials> node
 	for (const TiXmlElement* materialNode = pMaterialsElement->FirstChildElement(); materialNode != NULL; materialNode = materialNode->NextSiblingElement())
 	{
@@ -126,59 +131,22 @@ void SceneParser::ParseMaterialsNode(const TiXmlElement* pMaterialsElement)
 			continue;
 
 		// Fill out materials loading parameters
-		MaterialLoaderParams tempLoaderParams;
+		MaterialLoader tempLoaderParams;
 
-		materialNode->QueryStringAttribute("diffuseid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::DIFFUSE)]);
-		materialNode->QueryStringAttribute("specularid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::SPECULAR)]);
-		materialNode->QueryStringAttribute("normalid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::NORMAL)]);
-		materialNode->QueryStringAttribute("heightid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::HEIGHT)]);
-		materialNode->QueryStringAttribute("emissionid", &tempLoaderParams.textureMapIDs[static_cast<int>(TextureType::EMISSION)]);
+		materialNode->QueryStringAttribute("DiffuseFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::DIFFUSE)]);
+		materialNode->QueryStringAttribute("SpecularFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::SPECULAR)]);
+		materialNode->QueryStringAttribute("NormalFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::NORMAL)]);
+		materialNode->QueryStringAttribute("HeightFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::HEIGHT)]);
+		materialNode->QueryStringAttribute("EmissionFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::EMISSION)]);
 
-		materialNode->QueryBoolAttribute("normalmapNormalize", &tempLoaderParams.normalMapNormalize);
-		materialNode->QueryFloatAttribute("heightmapHeight", &tempLoaderParams.heightMapHeight);
-
-		// Materials are split into separate containers to allow faster parsing through multi threading
-		if (bInsertInFirst)
-		{
-			bInsertInFirst = !bInsertInFirst;
-			m_firstMatMap.insert({ materialNode->Attribute("id"), tempLoaderParams });
-		}
-		else
-		{
-			bInsertInFirst = !bInsertInFirst;
-			m_secondMatMap.insert({ materialNode->Attribute("id"), tempLoaderParams });
-		}
-	}
-}
-
-/// <summary>
-/// Parse one half of the materials used in the scene
-/// </summary>
-void SceneParser::ParseFirstHalfMaterials()
-{
-	// Create material using filled out loading parameters and assign the id to it
-	for (const auto& [materialID, materialLoaderParams] : m_firstMatMap)
-	{
-		TheMaterialManager::Instance()->CreateMaterial(materialID, materialLoaderParams);
-	}
-}
-
-/// <summary>
-/// Parse the other half of the materials used in the scene
-/// </summary>
-void SceneParser::ParseSecondHalfMaterials()
-{
-	// Create material using filled out loading parameters and assign the id to it
-	for (const auto& [materialID, materialLoaderParams] : m_secondMatMap)
-	{
-		TheMaterialManager::Instance()->CreateMaterial(materialID, materialLoaderParams);
+		m_materialMap.insert({ materialNode->Attribute("Name"), tempLoaderParams });
 	}
 }
 
 /// <summary>
 /// Parse the <lights> node
 /// </summary>
-void SceneParser::ParseLightsNode(const TiXmlElement* pLightsElement, std::shared_ptr<SceneLightManager>& sceneLightManager)
+void SceneParser::ReadLightsElement(const TiXmlElement* pLightsElement, std::shared_ptr<SceneLightManager>& sceneLightManager)
 {
 	// Loop through all elements of <lights> node
 	for (const TiXmlElement* lightElement = pLightsElement->FirstChildElement(); lightElement != NULL; lightElement = lightElement->NextSiblingElement())
@@ -235,7 +203,7 @@ void SceneParser::ParseLightsNode(const TiXmlElement* pLightsElement, std::share
 /// <summary>
 /// Parse the <models> node
 /// </summary>
-void SceneParser::ParseModelsNode(const TiXmlElement* pModelElement, SceneModels& sceneModels)
+void SceneParser::ReadModelsElement(const TiXmlElement* pModelElement, SceneModels& sceneModels)
 {
 	std::unordered_multimap<std::string, std::string> tempMap;
 
@@ -247,10 +215,10 @@ void SceneParser::ParseModelsNode(const TiXmlElement* pModelElement, SceneModels
 			continue;
 
 		// Fill out initial value of a model from XML scene data
-		ModelLoaderParams tempLoaderParams;
+		ModelLoader tempLoaderParams;
 
-		modelElement->QueryStringAttribute("material",	&tempLoaderParams.materialID);
-		modelElement->QueryStringAttribute("mesh",		&tempLoaderParams.meshID);
+		modelElement->QueryStringAttribute("MaterialName",	&tempLoaderParams.materialName);
+		modelElement->QueryStringAttribute("MeshFile",		&tempLoaderParams.meshFile);
 
 		modelElement->QueryFloatAttribute("posX",		&tempLoaderParams.position.SetX());
 		modelElement->QueryFloatAttribute("posY",		&tempLoaderParams.position.SetY());
@@ -265,13 +233,51 @@ void SceneParser::ParseModelsNode(const TiXmlElement* pModelElement, SceneModels
 		modelElement->QueryFloatAttribute("scaleZ",		&tempLoaderParams.scale.SetZ());
 
 		// Set models ID as number of times the mesh has currently been used in the scene
-		tempMap.insert({ tempLoaderParams.meshID , tempLoaderParams.meshID });
-		tempLoaderParams.modelID = tempLoaderParams.meshID + " " + std::to_string(tempMap.count(tempLoaderParams.meshID));
+		tempMap.insert({ tempLoaderParams.meshFile , tempLoaderParams.meshFile });
+		tempLoaderParams.modelID = tempLoaderParams.meshFile + " " + std::to_string(tempMap.count(tempLoaderParams.meshFile));
 
 		sceneModels.emplace_back(std::make_shared<Model>(tempLoaderParams));
 
-		// Use the meshID to create initial mesh
-		MeshManager::Get()->AddResource(tempLoaderParams.meshID);
+	}
+}
+
+/// <summary>
+/// Create resources that must be made regardless of scene - such as missingtexture
+/// </summary>
+void SceneParser::CreateResourceEssentials()
+{
+	// Create missingtexture
+	TextureLoader errorTextureLoader;
+	errorTextureLoader.file = MISSING_TEXTURE_FILENAME1;
+	errorTextureLoader.textureType = DIFFUSE;
+	int textureErrorID = TextureManager::Get()->AddResource(&errorTextureLoader);
+	TextureManager::Get()->SetErrorResourceID(textureErrorID);
+	PRINT_RED("texture errorid is {0}", textureErrorID);
+
+	// Create missingmesh
+	MeshLoader errorMeshLoader;
+	errorMeshLoader.file = MISSING_MESH_FILENAME;
+	MeshManager::Get()->AddResource(&errorMeshLoader);
+	int meshErrorID = MeshManager::Get()->AddResource(&errorMeshLoader);
+	MeshManager::Get()->SetErrorResourceID(meshErrorID);
+	PRINT_RED("mesh errorid is {0}", meshErrorID);
+
+	// Create essential shaders
+	ShaderLoader lightShader;
+	lightShader.file = "lighting";
+	ShaderManager::Get()->AddResource(&lightShader);
+
+	ShaderLoader skyShader;
+	skyShader.file = "sky";
+	ShaderManager::Get()->AddResource(&skyShader);
+}
+
+void SceneParser::CreateMaterials()
+{
+	// Create material using filled out loading parameters and assign the id to it
+	for (const auto& [materialID, materialLoaderParams] : m_materialMap)
+	{
+		TheMaterialManager::Instance()->CreateMaterial(materialID, materialLoaderParams);
 	}
 }
 

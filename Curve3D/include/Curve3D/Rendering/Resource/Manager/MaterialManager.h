@@ -3,9 +3,6 @@
 // Everything that uses MaterialManager will use Material
 #include "Rendering/Material.h"
 
-typedef std::unordered_map<std::string, std::shared_ptr<Material>> MaterialPool;
-
-
 /// <summary>
 /// Encapsulates and abstracts the creation, deletion and usage of material objects
 /// Materials can only be used through this class
@@ -13,7 +10,7 @@ typedef std::unordered_map<std::string, std::shared_ptr<Material>> MaterialPool;
 class MaterialManager
 {
 public:
-	bool			CreateMaterial(const std::string& materialID, const MaterialLoaderParams& pParams);
+	bool			CreateMaterial(const std::string& materialID, const MaterialLoader& pParams);
 
 	void			BindMaterialAtID(const std::string& materialID, const glm::mat4& modelMat);
 	void			UnbindMaterialAtID(const std::string& materialID);
@@ -24,7 +21,7 @@ public:
 
 	std::weak_ptr<Material> GetMaterialAtID(const std::string& materialID)
 	{
-		return m_materialMap.count(materialID) ? m_materialMap.at(materialID) : nullptr;
+		return m_materialPool.count(materialID) ? m_materialPool.at(materialID) : nullptr;
 	}
 
 	static MaterialManager* Instance()
@@ -34,7 +31,8 @@ public:
 	}
 private:
 
-	MaterialPool	m_materialMap;
+	typedef std::unordered_map<std::string, std::shared_ptr<Material>> MaterialPool;
+	MaterialPool	m_materialPool;
 
 	MaterialManager() {}
 	~MaterialManager() {}

@@ -46,9 +46,9 @@ PerformanceTimer::PerformanceTimer(const char* tag)
 	m_startTimepoint = std::chrono::high_resolution_clock::now();
 
 	if (m_tag != EMPTY_TAG)
-		PRINT_TRACE("{0} timer has started counting", m_tag);
+		PRINT_WHITE("{0} timer has started counting", m_tag);
 	else
-		PRINT_TRACE("A timer has started counting");
+		PRINT_WHITE("A timer has started counting");
 }
 
 PerformanceTimer::~PerformanceTimer()
@@ -73,7 +73,7 @@ void PerformanceTimer::Stop()
 	double ms = duration * 0.001;
 
 	if (m_tag != EMPTY_TAG)
-		PRINT_TRACE("{0} timer finished - duration is {1}ms", m_tag, ms);
+		PRINT_WHITE("{0} timer finished - duration is {1}ms", m_tag, ms);
 	else
-		PRINT_TRACE("A timer finished - duration is {0}ms", ms);
+		PRINT_WHITE("A timer finished - duration is {0}ms", ms);
 }

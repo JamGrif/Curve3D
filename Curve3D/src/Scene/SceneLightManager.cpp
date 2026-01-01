@@ -34,7 +34,7 @@ void SceneLightManager::AddDirectionalLight(std::shared_ptr<DirectionalLoaderPar
 	if (m_sceneDirectionalLights.size() < m_maxDirectionalLights)
 		m_sceneDirectionalLights.emplace_back(std::make_shared<DirectionalLight>(pParams));
 	else
-		PRINT_WARN("LIGHTMANAGER-> Can't create new directional light with direction {0} , {1} , {2}",
+		PRINT_YELLOW("LIGHTMANAGER-> Can't create new directional light with direction {0} , {1} , {2}",
 			pParams->direction.GetX(), pParams->direction.GetY(), pParams->direction.GetZ());
 }
 
@@ -67,7 +67,7 @@ void SceneLightManager::AddPointLight(std::shared_ptr<PointLoaderParams> pParams
 	if (m_scenePointLights.size() < m_maxPointLights)
 		m_scenePointLights.emplace_back(std::make_shared<PointLight>(pParams));
 	else
-		PRINT_WARN("LIGHTMANAGER-> Can't create new point light with direction {0} , {1} , {2}",
+		PRINT_RED("LIGHTMANAGER-> Can't create new point light with direction {0} , {1} , {2}",
 			pParams->position.GetX(), pParams->position.GetY(), pParams->position.GetZ());
 }
 
@@ -100,7 +100,7 @@ void SceneLightManager::AddSpotLight(std::shared_ptr<SpotLoaderParams> pParams)
 	if (m_sceneSpotLights.size() < m_maxSpotLights)
 		m_sceneSpotLights.emplace_back(std::make_shared<SpotLight>(pParams));
 	else
-		PRINT_WARN("LIGHTMANAGER-> Can't create spot light at {0} , {1} , {2}",
+		PRINT_YELLOW("LIGHTMANAGER-> Can't create spot light at {0} , {1} , {2}",
 			pParams->position.GetX(), pParams->position.GetY(), pParams->position.GetZ());
 }
 

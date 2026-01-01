@@ -80,8 +80,6 @@ namespace Curve3D
 		// Initialize all systems used by application
 		Log::Init();
 
-		PRINT_WARN(text);
-
 		TheOpenGLRenderer::Get()->Init();
 
 		Clock::Get()->Init();
@@ -173,6 +171,4 @@ namespace Curve3D
 		// Scene failed to load
 		return false;
 	}
-
 }
-

@@ -12,17 +12,19 @@ class SceneCamera;
 class SceneSky
 {
 public:
-	SceneSky(const ResourceID& cubemapID);
+	SceneSky();
     ~SceneSky();
 
 	void			DrawSky();
 
 	void			SetCameraPointer(std::weak_ptr<SceneCamera> pSceneCamera) { m_pSceneCamera = pSceneCamera; }
 
+	void			SetSkyID(const std::string& skyFile);
+
 private:
 
-	const ResourceID m_cubemapID;
-	const ResourceID m_shaderID;
+	ResourceFile m_cubemapID;
+	const ResourceFile m_shaderID;
 
 	std::weak_ptr<SceneCamera> m_pSceneCamera;
 

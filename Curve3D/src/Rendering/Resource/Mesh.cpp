@@ -53,24 +53,24 @@ Mesh::~Mesh()
 /// 1 / 2 of mesh creation
 /// Parse the .obj file at filepath
 /// </summary>
-void Mesh::Parse(const std::string& filepath)
+bool Mesh::Parse(IResourceLoader* resourceLoader)
 {
-	std::string meshFilepath = MESH_FILEPATH_PREFIX + filepath + MESH_FILEPATH_SUFFIX;
+	m_resourceFilepath = MESH_FILEPATH_PREFIX + resourceLoader->file + MESH_FILEPATH_SUFFIX;
 
 	Assimp::Importer assimpImporter;
-	const aiScene* assimpScene = assimpImporter.ReadFile(meshFilepath, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
+	const aiScene* assimpScene = assimpImporter.ReadFile(m_resourceFilepath, aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_JoinIdenticalVertices);
 
 	if (!assimpScene || assimpScene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !assimpScene->mRootNode)
 	{
-		PRINT_WARN("MESH-> {0} failed to load", meshFilepath);
-		return;
+		m_errorMessage = "Failed to parse mesh at " + m_resourceFilepath;
+		return false;
 	}
 
 	const aiMesh* mesh = assimpScene->mMeshes[0];
 
 	// Reserve enough space to hold all the vertices
 	m_meshVertices.reserve(mesh->mNumVertices);
-	
+
 	// Parse vertices
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
@@ -108,14 +108,14 @@ void Mesh::Parse(const std::string& filepath)
 		}
 	}
 
-	m_resourceFilepath = meshFilepath;
+	return true;
 }
 
 /// <summary>
 /// 2 / 2 of mesh creation
 /// Use parsed mesh data to create OpenGL VBO and EBO buffers
 /// </summary>
-void Mesh::Create()
+bool Mesh::Create()
 {
 	// Create VBO
 	glCall(glGenBuffers(1, &m_OpenGLResourceID));
@@ -132,14 +132,8 @@ void Mesh::Create()
 	glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NO_BUFFER));
 
 	m_bIsCreated = true;
-}
 
-/// <summary>
-/// What the mesh will do when its reset
-/// Unused in this class
-/// </summary>
-void Mesh::Reset()
-{
+	return true;
 }
 
 /// <summary>

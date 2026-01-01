@@ -5,15 +5,9 @@
 /// <summary>
 /// Material loading parameters which are passed to a Material object on construction to set initial values
 /// </summary>
-struct MaterialLoaderParams
+struct MaterialLoader
 {
-	std::string textureMapIDs[MATERIAL_TEXTURE_SLOTS];
-
-	// Should normal map be normalized in fragment shader?
-	bool		normalMapNormalize;
-
-	// Height to render the height map within fragment shader
-	float		heightMapHeight;	
+	std::string textureFile[MATERIAL_TEXTURE_SLOTS];
 };
 
 /// <summary>
@@ -23,16 +17,8 @@ struct MaterialLoaderParams
 class Material
 {
 public:
-	Material(const MaterialLoaderParams& pParams);
+	Material(const MaterialLoader& pParams);
 	~Material();
-
-	/// <summary>
-	/// Return IDs of all textures the materials uses
-	/// </summary>
-	const MaterialTextures& GetAllTextureIDs()
-	{
-		return m_textureMapIDs;
-	}
 
 private:
 
@@ -46,14 +32,11 @@ private:
 	// Shader the material uses
 	std::string		m_shaderID;
 
-	// Textures the material uses
-	typedef std::array<bool, MATERIAL_TEXTURE_SLOTS> MaterialUsingTextures;
-	MaterialUsingTextures m_textureMapUsing;
-
-	MaterialTextures m_textureMapIDs;
+	// Filename of the texture in texture slot
+	typedef std::array<ResourceID, MATERIAL_TEXTURE_SLOTS> MaterialTextures;
+	MaterialTextures m_materialTextures;
 
 	// Rendering data
-	bool			m_bNormalMapNormalize;
 	float			m_heightMapHeight;
 
 	// Cached scene objects

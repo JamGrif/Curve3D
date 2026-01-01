@@ -1,14 +1,9 @@
 #pragma once
 
-//#define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING
-//#define _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS
-
-#include "spdlog/logger.h"
-
+#include "spdlog/spdlog.h"
 
 /// <summary>
-/// Logging system that prints text to the console
-/// Provides four different printing types which set colour of text
+/// Log messages to the console
 /// </summary>
 class Log
 {
@@ -24,15 +19,15 @@ private:
 	Log();
 };
 
-// Logging Macros - only in debug mode
+// Logging Macros
 #ifdef _DEBUG
-	#define PRINT_TRACE(...) ::Log::GetLogger()->trace(__VA_ARGS__)	// White
-	#define PRINT_INFO(...) ::Log::GetLogger()->info(__VA_ARGS__)	// Green
-	#define PRINT_WARN(...) ::Log::GetLogger()->warn(__VA_ARGS__)	// Yellow
-	#define PRINT_ERROR(...) ::Log::GetLogger()->error(__VA_ARGS__) // Red
+	#define PRINT_WHITE(...) SPDLOG_LOGGER_TRACE(::Log::GetLogger(), __VA_ARGS__)	// White
+	#define PRINT_GREEN(...) SPDLOG_LOGGER_INFO(::Log::GetLogger(), __VA_ARGS__)	// Green
+	#define PRINT_YELLOW(...) SPDLOG_LOGGER_WARN(::Log::GetLogger(), __VA_ARGS__)	// Yellow
+	#define PRINT_RED(...) SPDLOG_LOGGER_ERROR(::Log::GetLogger(), __VA_ARGS__) // Red
 #else
-	#define PRINT_TRACE(...)
-	#define PRINT_INFO(...)
-	#define PRINT_WARN(...) 
-	#define PRINT_ERROR(...)
+	#define PRINT_WHITE(...)
+	#define PRINT_GREEN(...)
+	#define PRINT_YELLOW(...) 
+	#define PRINT_RED(...)
 #endif

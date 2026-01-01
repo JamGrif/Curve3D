@@ -12,8 +12,6 @@ static constexpr int NO_TEXTURE = 0;
 static const std::string TEXTURE_FILEPATH_PREFIX = "res/textures/";
 static const std::string TEXTURE_FILEPATH_SUFFIX = ".png";
 
-static const char* STBI_ERROR_MESSAGE = "can't fopen";
-
 Texture::Texture()
 	:IResource(), m_textureWidth(0), m_textureHeight(0), m_textureBPP(0),
 	m_textureType(TextureType::UNSET), m_pTempBuffer(nullptr)
@@ -31,34 +29,35 @@ Texture::~Texture()
 /// 1 / 2 of texture creation
 /// Parse the .png file at filepath
 /// </summary>
-void Texture::Parse(const std::string& filepath)
+bool Texture::Parse(IResourceLoader* resourceLoader)
 {
+	TextureLoader* tl = dynamic_cast<TextureLoader*>(resourceLoader);
+
+	m_resourceFile = resourceLoader->file;
+	m_textureType = tl->textureType;
+
 	// Flips texture on Y-Axis
-	stbi_set_flip_vertically_on_load_thread(true);
+	stbi_set_flip_vertically_on_load(true);
 
-	// Automatically set the filepath of texture
-	std::string textureFilepath = TEXTURE_FILEPATH_PREFIX + filepath + TEXTURE_FILEPATH_SUFFIX;
+	m_resourceFilepath = TEXTURE_FILEPATH_PREFIX + resourceLoader->file + TEXTURE_FILEPATH_SUFFIX;
 
-	m_pTempBuffer = stbi_load(textureFilepath.c_str(), &m_textureWidth, &m_textureHeight, &m_textureBPP, DESIRED_TEXTURE_CHANNELS);
+	m_pTempBuffer = stbi_load(m_resourceFilepath.c_str(), &m_textureWidth, &m_textureHeight, &m_textureBPP, DESIRED_TEXTURE_CHANNELS);
 
-	// Check result
-	if (stbi_failure_reason() == STBI_ERROR_MESSAGE)
+	if (!m_pTempBuffer)
 	{
-		PRINT_WARN("TEXTURE-> {0} failed to parse texture", m_resourceFilepath);
 		stbi_image_free(m_pTempBuffer);
-
-		return;
+		m_errorMessage = "Failed to parse texture at " + m_resourceFilepath;
+		return false;
 	}
 
-	m_resourceID = filepath;
-	m_resourceFilepath = textureFilepath;
+	return true;
 }
 
 /// <summary>
 /// 2 / 2 of texture creation
 /// Use parsed texture data to create OpenGL texture buffers
 /// </summary>
-void Texture::Create()
+bool Texture::Create()
 {
 	// Generate one texture buffer
 	glCall(glGenTextures(1, &m_OpenGLResourceID));
@@ -98,14 +97,8 @@ void Texture::Create()
 	}
 
 	m_bIsCreated = true;
-}
 
-/// <summary>
-/// What the texture will do when its reset
-/// Unused in this class
-/// </summary>
-void Texture::Reset()
-{
+	return true;
 }
 
 /// <summary>

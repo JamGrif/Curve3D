@@ -4,9 +4,6 @@
 #include "Scene/Scene.h"
 #include "Rendering/Model.h"
 #include "UI/SceneModelsPanel.h"
-#include "Rendering/Resource/Manager/ResourceManager.h"
-#include "Rendering/Resource/Manager/MaterialManager.h"
-#include "Rendering/Resource/IResource.h"
 
 #include "imgui.h"
 
@@ -33,7 +30,7 @@ struct SelectedModelCache
 	std::string meshID;
 	std::string materialID;
 
-	ResourceID materialTextureIDs[MATERIAL_TEXTURE_SLOTS];
+	ResourceFile materialTextureIDs[MATERIAL_TEXTURE_SLOTS];
 	std::string materialTextureFilepaths[MATERIAL_TEXTURE_SLOTS];
 	OpenGLIndex materialTextureOpenGLIDs[MATERIAL_TEXTURE_SLOTS]{ 0,0,0,0,0 };
 };
@@ -177,22 +174,22 @@ void ModelDataPanel::SetupModelCache()
 	m_pModelCache->materialID	= m_pModelCache->pModel.lock()->GetMaterialID();
 
 	// Get the IDs of all textures the material uses
-	std::shared_ptr<Material> tempMaterial		= MaterialManager::Instance()->GetMaterialAtID(m_pModelCache->pModel.lock()->GetMaterialID()).lock();
-	MaterialTextures tempMaterialTexturesIDs	= tempMaterial->GetAllTextureIDs();
-
-	for (unsigned int i = 0; i < MATERIAL_TEXTURE_SLOTS; i++)
-	{
-		if (tempMaterialTexturesIDs.at(i) != EMPTY_TEXTURE_ID)
-		{
-			m_pModelCache->materialTextureIDs[i]		= TextureManager::Get()->GetResourceAtID(tempMaterialTexturesIDs.at(i))->GetResourceID();
-			m_pModelCache->materialTextureFilepaths[i]	= TextureManager::Get()->GetResourceAtID(tempMaterialTexturesIDs.at(i))->GetFilepath();
-			m_pModelCache->materialTextureOpenGLIDs[i]	= TextureManager::Get()->GetResourceAtID(tempMaterialTexturesIDs.at(i))->GetOpenGLID();
-		}
-		else
-		{
-			m_pModelCache->materialTextureIDs[i] = EMPTY_TEXTURE_ID;
-		}
-	}
+	//std::shared_ptr<Material> tempMaterial		= MaterialManager::Instance()->GetMaterialAtID(m_pModelCache->pModel.lock()->GetMaterialID()).lock();
+	////MaterialTextures tempMaterialTexturesIDs	= tempMaterial->GetAllTextureIDs();
+	//
+	//for (unsigned int i = 0; i < MATERIAL_TEXTURE_SLOTS; i++)
+	//{
+	//	if (tempMaterialTexturesIDs.at(i) != EMPTY_TEXTURE_ID)
+	//	{
+	//		m_pModelCache->materialTextureIDs[i]		= TextureManager::Get()->GetResourceAtID(tempMaterialTexturesIDs.at(i))->GetResourceID();
+	//		m_pModelCache->materialTextureFilepaths[i]	= TextureManager::Get()->GetResourceAtID(tempMaterialTexturesIDs.at(i))->GetFilepath();
+	//		m_pModelCache->materialTextureOpenGLIDs[i]	= TextureManager::Get()->GetResourceAtID(tempMaterialTexturesIDs.at(i))->GetOpenGLID();
+	//	}
+	//	else
+	//	{
+	//		m_pModelCache->materialTextureIDs[i] = EMPTY_TEXTURE_ID;
+	//	}
+	//}
 }
 
 /// <summary>

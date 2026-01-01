@@ -1,9 +1,13 @@
 #pragma once
 
-// Forward declares typedefs and classes/structs that are used in various files
+// Forward declarations of typedefs and classes used in various files
 
 // ResourceManager
-typedef std::string ResourceID;
+typedef std::string ResourceFile;
+typedef int ResourceID;
+
+// IResource
+constexpr ResourceID UNSET_RESOURCE_ID = 0;
 
 // Internal OpenGL buffer index
 typedef uint32_t OpenGLIndex;
@@ -21,4 +25,5 @@ typedef std::vector<std::shared_ptr<Model>> SceneModels;
 
 // Material
 constexpr int MATERIAL_TEXTURE_SLOTS = 5;
-typedef std::array<ResourceID, MATERIAL_TEXTURE_SLOTS> MaterialTextures;
+constexpr auto NULL_TEXTURE = "null";
+

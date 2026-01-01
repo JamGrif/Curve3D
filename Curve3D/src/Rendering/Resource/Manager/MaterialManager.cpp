@@ -4,14 +4,14 @@
 /// <summary>
 /// Create a new material using the values in the MaterialLoaderParams and add it to the materialMap at ID
 /// </summary>
-bool MaterialManager::CreateMaterial(const std::string& materialID, const MaterialLoaderParams& pParams)
+bool MaterialManager::CreateMaterial(const std::string& materialID, const MaterialLoader& pParams)
 {
 	// Check if material with ID already exists
-	if (m_materialMap.find(materialID) != m_materialMap.end())
+	if (m_materialPool.find(materialID) != m_materialPool.end())
 		return false;
 
 	// Create material and insert into materialMap
-	m_materialMap.insert({ materialID, std::make_shared<Material>(pParams) });
+	m_materialPool.insert({ materialID, std::make_shared<Material>(pParams) });
 
 	return true;
 }
@@ -21,9 +21,9 @@ bool MaterialManager::CreateMaterial(const std::string& materialID, const Materi
 /// </summary>
 void MaterialManager::BindMaterialAtID(const std::string& materialID, const glm::mat4& modelMat)
 {
-	if (m_materialMap.count(materialID))
+	if (m_materialPool.count(materialID))
 	{
-		m_materialMap.at(materialID)->BindMaterial(modelMat);
+		m_materialPool.at(materialID)->BindMaterial(modelMat);
 	}
 }
 
@@ -32,9 +32,9 @@ void MaterialManager::BindMaterialAtID(const std::string& materialID, const glm:
 /// </summary>
 void MaterialManager::UnbindMaterialAtID(const std::string& materialID)
 {
-	if (m_materialMap.count(materialID))
+	if (m_materialPool.count(materialID))
 	{
-		m_materialMap.at(materialID)->UnbindMaterial();
+		m_materialPool.at(materialID)->UnbindMaterial();
 	}
 }
 
@@ -43,7 +43,7 @@ void MaterialManager::UnbindMaterialAtID(const std::string& materialID)
 /// </summary>
 void MaterialManager::ClearAllMaterials()
 {
-	m_materialMap.clear();
+	m_materialPool.clear();
 }
 
 /// <summary>
@@ -51,7 +51,7 @@ void MaterialManager::ClearAllMaterials()
 /// </summary>
 void MaterialManager::SetAllMaterialScenePointers(std::weak_ptr<SceneLightManager> pSceneLightManager, std::weak_ptr<SceneCamera> pSceneCamera)
 {
-	for (const auto& [materialID, material] : m_materialMap)
+	for (const auto& [materialID, material] : m_materialPool)
 	{
 		material->SetScenePointers(pSceneLightManager, pSceneCamera);
 	}
