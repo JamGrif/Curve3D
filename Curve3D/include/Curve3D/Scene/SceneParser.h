@@ -20,9 +20,9 @@ public:
 private:
 
 	// Elements of .xml file
-	void ReadMaterialsElement(const TiXmlElement* pMaterialsElement);
-	void ReadModelsElement(const TiXmlElement* pModelElement, SceneModels& sceneModels);
-	void ReadLightsElement(const TiXmlElement* pLightsElement, std::shared_ptr<SceneLightManager>& sceneLightManager);
+	void ReadMaterialsElement(const TiXmlElement* pMaterialsRootElement);
+	void ReadModelsElement(const TiXmlElement* pModelsRootElement, SceneModels& sceneModels);
+	void ReadLightsElement(const TiXmlElement* pLightsRootElement, std::shared_ptr<SceneLightManager>& sceneLightManager);
 
 	void CreateResourceEssentials();
 

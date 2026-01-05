@@ -10,10 +10,13 @@
 
 #include "GL/glew.h"
 
-static constexpr int NO_BUFFER = 0;
+namespace
+{
+	constexpr int NO_OPENGL_BUFFER = 0;
 
-static const std::string MESH_FILEPATH_PREFIX = "res/meshes/";
-static const std::string MESH_FILEPATH_SUFFIX = ".obj";
+	constexpr auto MESH_FILEPATH_PREFIX = "res/meshes/";
+	constexpr auto MESH_FILEPATH_SUFFIX = ".obj";
+}
 
 // Numbers correspond to vertex attribute positions in shader
 enum class VertexAttribute
@@ -35,15 +38,15 @@ struct Vertex
 };
 
 Mesh::Mesh()
-	:IResource(), m_meshEBO(NO_BUFFER)
+	:IResource(), m_meshEBO(NO_OPENGL_BUFFER)
 {
 }
 
 Mesh::~Mesh()
 {
 	// Unbind and delete buffers
-	glCall(glBindBuffer(GL_ARRAY_BUFFER, NO_BUFFER));
-	glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NO_BUFFER));
+	glCall(glBindBuffer(GL_ARRAY_BUFFER, NO_OPENGL_BUFFER));
+	glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NO_OPENGL_BUFFER));
 
 	glCall(glDeleteBuffers(1, &m_OpenGLResourceID));
 	glCall(glDeleteBuffers(1, &m_meshEBO));
@@ -122,14 +125,14 @@ bool Mesh::Create()
 	glCall(glBindBuffer(GL_ARRAY_BUFFER, m_OpenGLResourceID));
 	glCall(glBufferData(GL_ARRAY_BUFFER, m_meshVertices.size() * sizeof(Vertex), &m_meshVertices[0], GL_STATIC_DRAW));
 
-	glCall(glBindBuffer(GL_ARRAY_BUFFER, NO_BUFFER));
+	glCall(glBindBuffer(GL_ARRAY_BUFFER, NO_OPENGL_BUFFER));
 
 	// Create EBO
 	glCall(glGenBuffers(1, &m_meshEBO));
 	glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_meshEBO));
 	glCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_meshIndices.size() * sizeof(unsigned int), &m_meshIndices[0], GL_STATIC_DRAW));
 	
-	glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NO_BUFFER));
+	glCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, NO_OPENGL_BUFFER));
 
 	m_bIsCreated = true;
 

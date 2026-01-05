@@ -10,14 +10,10 @@
 #include "Rendering/OpenGLRenderer.h"
 #include "Scene/SceneCamera.h"
 
-std::string MISSING_MESH_FILENAME2 = "missingmesh";
-
-
 Model::Model(const ModelLoader& pParams)
 	:m_modelID(pParams.modelID), m_materialID(pParams.materialName),
 	m_position(pParams.position), m_rotation(pParams.rotation), m_scale(pParams.scale),
-	m_mMat{ 1.0f }, m_vMat{ 1.0f }, m_tMat{ 1.0f }, m_rMat{ 1.0f }, m_sMat{ 1.0f },
-	m_programProjectionMatrix(TheOpenGLRenderer::Get()->GetProjectionMatrix())
+	m_mMat{ 1.0f }, m_vMat{ 1.0f }, m_tMat{ 1.0f }, m_rMat{ 1.0f }, m_sMat{ 1.0f }
 {
 	// Setup mesh to load
 	MeshLoader meshLoader;
@@ -25,9 +21,7 @@ Model::Model(const ModelLoader& pParams)
 
 	ResourceID meshID = MeshManager::Get()->AddResource(&meshLoader);
 	if (meshID == UNSET_RESOURCE_ID)
-	{
 		m_meshResourceID = MeshManager::Get()->GetErrorResourceID();
-	}
 	else
 		m_meshResourceID = meshID;
 }
@@ -59,14 +53,6 @@ void Model::DrawModel()
 	// Unbind material and mesh
 	MeshManager::Get()->UnbindResourceAtID(m_meshResourceID);
 	TheMaterialManager::Instance()->UnbindMaterialAtID(m_materialID);
-}
-
-/// <summary>
-/// Set the pointers the model uses from the scene
-/// </summary>
-void Model::SetModelPointers(std::weak_ptr<SceneCamera> pSceneCamera)
-{
-	m_pSceneCamera = pSceneCamera;
 }
 
 /// <summary>

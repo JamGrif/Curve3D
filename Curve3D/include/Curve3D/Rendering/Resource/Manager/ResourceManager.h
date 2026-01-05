@@ -19,8 +19,9 @@ public:
 	/// <summary>
 	/// 1 / 2 of resource creation
 	/// Adds a new resource and parses its data file
+	/// Returns the index of the new resource in the resource pool
 	/// </summary>
-	int AddResource(IResourceLoader* resourceLoader)
+	ResourceID AddResource(IResourceLoader* resourceLoader)
 	{
 		// If resource at file already exists, return its index in resource pool
 		if (m_createdResources.find(resourceLoader->file) != m_createdResources.end())
@@ -46,7 +47,7 @@ public:
 
 	/// <summary>
 	/// 2 / 2 of resource creation
-	/// Creates all resources of a specific type that have been successfully parsed
+	/// Creates all resources that have been successfully parsed
 	/// </summary>
 	void CreateAllResources()
 	{
@@ -104,7 +105,7 @@ public:
 	}
 
 	/// <summary>
-	/// Deletes all resources of a specific type
+	/// Deletes all resources in resource pool
 	/// </summary>
 	void ClearAllResources()
 	{

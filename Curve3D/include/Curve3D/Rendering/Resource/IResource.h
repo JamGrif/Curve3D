@@ -10,7 +10,6 @@ struct IResourceLoader
 	std::string file;
 
 	virtual ~IResourceLoader() = 0;
-
 };
 
 /// <summary>
@@ -50,6 +49,6 @@ protected:
 
 	std::string			m_resourceFilepath;
 
-	// If the resources fails to get created or parsed, the reason will be placed into m_errorMessage
+	// If the resource fails to get created or parsed, the reason will be placed into m_errorMessage
 	std::string m_errorMessage;
 };

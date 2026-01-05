@@ -71,14 +71,14 @@ namespace Launcher
             LaunchButton.Enabled = true;
         }
 
-        // Start Engine.exe with the startSceneName scene
+        // Start Curve3D.exe with the startSceneName scene
         private void StartProcess(string startSceneName)
         {
             Process? demoProcess = Process.Start(new ProcessStartInfo()
             {
                 FileName = "Curve3D.exe",
-                RedirectStandardOutput = false,
-                UseShellExecute = false,
+                RedirectStandardOutput = false, // Coloured text in Curve3D console
+                UseShellExecute = true,
                 ArgumentList = { startSceneName },
             });
 

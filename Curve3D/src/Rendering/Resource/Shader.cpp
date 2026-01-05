@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "Rendering/Resource/Shader.h"
 
-#include "Rendering/OpenGLErrorCheck.h"
-
 #include "glm\gtc\type_ptr.hpp"
 
 #include "GL/glew.h"

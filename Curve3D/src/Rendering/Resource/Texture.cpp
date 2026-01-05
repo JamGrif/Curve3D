@@ -3,14 +3,17 @@
 
 #include "Rendering/OpenGLErrorCheck.h"
 
-#include "stb_image/stb_image.h" // Image loading
+#include "stb_image/stb_image.h" 
 #include "GL/glew.h"
 
-static constexpr int DESIRED_TEXTURE_CHANNELS = 4;
-static constexpr int NO_TEXTURE = 0;
+namespace
+{
+	constexpr int DESIRED_TEXTURE_CHANNELS = 4;
+	constexpr int NO_OPENGL_TEXTURE = 0;
 
-static const std::string TEXTURE_FILEPATH_PREFIX = "res/textures/";
-static const std::string TEXTURE_FILEPATH_SUFFIX = ".png";
+	constexpr auto TEXTURE_FILEPATH_PREFIX = "res/textures/";
+	constexpr auto TEXTURE_FILEPATH_SUFFIX = ".png";
+}
 
 Texture::Texture()
 	:IResource(), m_textureWidth(0), m_textureHeight(0), m_textureBPP(0),
@@ -21,7 +24,7 @@ Texture::Texture()
 Texture::~Texture()
 {
 	// Unbind and delete buffers
-	glCall(glBindTexture(GL_TEXTURE_2D, NO_TEXTURE));
+	glCall(glBindTexture(GL_TEXTURE_2D, NO_OPENGL_TEXTURE));
 	glCall(glDeleteTextures(1, &m_OpenGLResourceID));
 }
 
@@ -88,7 +91,7 @@ bool Texture::Create()
 	glCall(glGenerateMipmap(GL_TEXTURE_2D));
 
 	// Unbind
-	glCall(glBindTexture(GL_TEXTURE_2D, NO_TEXTURE));
+	glCall(glBindTexture(GL_TEXTURE_2D, NO_OPENGL_TEXTURE));
 
 	if (m_pTempBuffer)
 	{
@@ -116,5 +119,5 @@ void Texture::Bind()
 void Texture::Unbind()
 {
 	glCall(glActiveTexture(GL_TEXTURE0 + static_cast<int>(m_textureType)));
-	glCall(glBindTexture(GL_TEXTURE_2D, NO_TEXTURE));
+	glCall(glBindTexture(GL_TEXTURE_2D, NO_OPENGL_TEXTURE));
 }

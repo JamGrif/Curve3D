@@ -22,9 +22,7 @@ bool MaterialManager::CreateMaterial(const std::string& materialID, const Materi
 void MaterialManager::BindMaterialAtID(const std::string& materialID, const glm::mat4& modelMat)
 {
 	if (m_materialPool.count(materialID))
-	{
 		m_materialPool.at(materialID)->BindMaterial(modelMat);
-	}
 }
 
 /// <summary>

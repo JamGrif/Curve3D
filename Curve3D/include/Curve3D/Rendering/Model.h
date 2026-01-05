@@ -2,6 +2,8 @@
 
 #include <glm\mat4x4.hpp>
 
+
+
 /// <summary>
 /// Model loading parameters which are passed to a Model object on construction to set initial values
 /// </summary>
@@ -14,7 +16,7 @@ struct ModelLoader
 	Vector3D scale;
 
 	std::string materialName;		// Name of material that the model will use
-	ResourceFile	meshFile;			// File of mesh that the model will use
+	ResourceFile	meshFile;		// File of mesh that the model will use
 };
 
 /// <summary>
@@ -29,7 +31,7 @@ public:
 	void				UpdateModel();
 	void				DrawModel();
 
-	void				SetModelPointers(std::weak_ptr<SceneCamera> pSceneCamera);
+	void				SetModelPointers(std::weak_ptr<SceneCamera> pSceneCamera) { m_pSceneCamera = pSceneCamera; }
 
 	const std::string&	GetModelID() const { return m_modelID; }
 
@@ -51,7 +53,6 @@ private:
 	std::string			m_modelID;
 
 	// For MeshManager - The mesh this model uses
-	//ResourceFile			m_meshID;
 	ResourceID				m_meshResourceID;
 
 	// For MaterialManager - The material this model uses
@@ -69,6 +70,4 @@ private:
 	glm::mat4			m_sMat;	// Scale
 
 	std::weak_ptr<SceneCamera> m_pSceneCamera;
-
-	const glm::mat4&	m_programProjectionMatrix;
 };

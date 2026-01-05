@@ -8,8 +8,6 @@
 class UI;
 class Scene;
 
-#include <string>
-
 namespace Curve3D
 {
 	void SetInitalParameters(const std::string& text);

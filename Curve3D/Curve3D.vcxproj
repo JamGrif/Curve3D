@@ -286,7 +286,7 @@ xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-m
     <ClCompile Include="src\Core\Vector3D.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Curve3D\Core\CommonFwd.h" />
+    <ClInclude Include="include\Curve3D\Core\Common.h" />
     <ClInclude Include="include\Curve3D\Core\Engine.h" />
     <ClInclude Include="include\Curve3D\Core\Clock.h" />
     <ClInclude Include="include\Curve3D\Core\InputHandler.h" />

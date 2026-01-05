@@ -16,17 +16,24 @@ namespace
 	constexpr auto SCENE_FILEPATH_PREFIX = "res/scenes/";
 	constexpr auto SCENE_FILEPATH_SUFFIX = ".xml";
 
-	// Scene Elements
-	constexpr auto MATERIALS_ELEMENT = "materials";
-	constexpr auto LIGHTS_ELEMENT = "lights";
-	constexpr auto MODELS_ELEMENT = "models";
+	constexpr auto MISSING_TEXTURE_FILE = "missingtexture";
+	constexpr auto MISSING_MESH_FILE = "missingmesh";
+
+	// Scene Root Elements
+	constexpr auto MATERIALS_ROOT_ELEMENT = "materials";
+	constexpr auto LIGHTS_ROOT_ELEMENT = "lights";
+	constexpr auto MODELS_ROOT_ELEMENT = "models";
 
 	// Scene Attributes
 	constexpr auto SKY_ATTRIBUTE = "SkyFile";
 
-	// Material Attributes
+	// Material Root Attributes
 	constexpr auto MATERIAL_NAME = "Name";
 	constexpr auto MATERIAL_DIFFUSE_FILE = "DiffuseFile";
+	constexpr auto MATERIAL_SPECULAR_FILE = "SpecularFile";
+	constexpr auto MATERIAL_NORMAL_FILE = "NormalFile";
+	constexpr auto MATERIAL_HEIGHT_FILE = "HeightFile";
+	constexpr auto MATERIAL_EMISSION_FILE = "EmissionFile";
 
 	// Light Attributes
 
@@ -35,11 +42,6 @@ namespace
 
 
 }
-
-// temp
-
-std::string MISSING_TEXTURE_FILENAME1 = "missingtexture";
-std::string MISSING_MESH_FILENAME = "missingmesh";
 
 SceneParser::SceneParser()
 {
@@ -62,29 +64,29 @@ bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& 
 	// Store <scene> node
 	TiXmlElement* pFileRoot = sceneDocument.RootElement();
 
-	const TiXmlElement* pMaterialElement = nullptr, * pLightElement = nullptr, * pModelElement = nullptr;
+	const TiXmlElement* pMaterialsRootElement = nullptr, *pLightsRootElement = nullptr, *pModelsRootElement = nullptr;
 
 	// Loop through all <scene> elements
-	for (TiXmlElement* currentElement = pFileRoot->FirstChildElement(); currentElement != NULL; currentElement = currentElement->NextSiblingElement())
+	for (TiXmlElement* currentElement = pFileRoot->FirstChildElement(); currentElement != nullptr; currentElement = currentElement->NextSiblingElement())
 	{
 		// <materials> element
-		if (strcmp(currentElement->Value(), MATERIALS_ELEMENT) == STRCMP_SUCCESS)
+		if (strcmp(currentElement->Value(), MATERIALS_ROOT_ELEMENT) == STRCMP_SUCCESS)
 		{
-			pMaterialElement = currentElement;
+			pMaterialsRootElement = currentElement;
 			continue;
 		}
 
 		// <lights> element
-		if (strcmp(currentElement->Value(), LIGHTS_ELEMENT) == STRCMP_SUCCESS)
+		if (strcmp(currentElement->Value(), LIGHTS_ROOT_ELEMENT) == STRCMP_SUCCESS)
 		{
-			pLightElement = currentElement;
+			pLightsRootElement = currentElement;
 			continue;
 		}
 
 		// <models> element
-		if (strcmp(currentElement->Value(), MODELS_ELEMENT) == STRCMP_SUCCESS)
+		if (strcmp(currentElement->Value(), MODELS_ROOT_ELEMENT) == STRCMP_SUCCESS)
 		{
-			pModelElement = currentElement;
+			pModelsRootElement = currentElement;
 			continue;
 		}
 	}
@@ -97,9 +99,9 @@ bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& 
 	CreateResourceEssentials();
 
 	// Parse each element of the scene file
-	ReadMaterialsElement(pMaterialElement);
-	ReadModelsElement(pModelElement, sceneModels);
-	ReadLightsElement(pLightElement, sceneLightManager);
+	ReadMaterialsElement(pMaterialsRootElement);
+	ReadModelsElement(pModelsRootElement, sceneModels);
+	ReadLightsElement(pLightsRootElement, sceneLightManager);
 
 	CreateMaterials();
 
@@ -119,37 +121,36 @@ bool SceneParser::ParseSceneFile(const std::string& sceneFilepath, SceneModels& 
 }
 
 /// <summary>
-/// Parse the <materials> node
+/// Parse the <materials> element
 /// </summary>
-void SceneParser::ReadMaterialsElement(const TiXmlElement* pMaterialsElement)
+void SceneParser::ReadMaterialsElement(const TiXmlElement* pMaterialsRootElement)
 {
 	// Loop through all elements of <materials> node
-	for (const TiXmlElement* materialNode = pMaterialsElement->FirstChildElement(); materialNode != NULL; materialNode = materialNode->NextSiblingElement())
+	for (const TiXmlElement* materialNode = pMaterialsRootElement->FirstChildElement(); materialNode != NULL; materialNode = materialNode->NextSiblingElement())
 	{
 		// Ensure element is a <material> element
 		if (strcmp(materialNode->Value(), "material") != STRCMP_SUCCESS)
 			continue;
 
 		// Fill out materials loading parameters
-		MaterialLoader tempLoaderParams;
+		MaterialLoader materialLoader;
+		materialNode->QueryStringAttribute(MATERIAL_DIFFUSE_FILE,	&materialLoader.textureFile[DIFFUSE]);
+		materialNode->QueryStringAttribute(MATERIAL_SPECULAR_FILE,	&materialLoader.textureFile[SPECULAR]);
+		materialNode->QueryStringAttribute(MATERIAL_NORMAL_FILE,	&materialLoader.textureFile[NORMAL]);
+		materialNode->QueryStringAttribute(MATERIAL_HEIGHT_FILE,	&materialLoader.textureFile[HEIGHT]);
+		materialNode->QueryStringAttribute(MATERIAL_EMISSION_FILE,	&materialLoader.textureFile[EMISSION]);
 
-		materialNode->QueryStringAttribute("DiffuseFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::DIFFUSE)]);
-		materialNode->QueryStringAttribute("SpecularFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::SPECULAR)]);
-		materialNode->QueryStringAttribute("NormalFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::NORMAL)]);
-		materialNode->QueryStringAttribute("HeightFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::HEIGHT)]);
-		materialNode->QueryStringAttribute("EmissionFile",	&tempLoaderParams.textureFile[static_cast<int>(TextureType::EMISSION)]);
-
-		m_materialMap.insert({ materialNode->Attribute("Name"), tempLoaderParams });
+		m_materialMap.insert({ materialNode->Attribute(MATERIAL_NAME), materialLoader });
 	}
 }
 
 /// <summary>
 /// Parse the <lights> node
 /// </summary>
-void SceneParser::ReadLightsElement(const TiXmlElement* pLightsElement, std::shared_ptr<SceneLightManager>& sceneLightManager)
+void SceneParser::ReadLightsElement(const TiXmlElement* pLightsRootElement, std::shared_ptr<SceneLightManager>& sceneLightManager)
 {
 	// Loop through all elements of <lights> node
-	for (const TiXmlElement* lightElement = pLightsElement->FirstChildElement(); lightElement != NULL; lightElement = lightElement->NextSiblingElement())
+	for (const TiXmlElement* lightElement = pLightsRootElement->FirstChildElement(); lightElement != NULL; lightElement = lightElement->NextSiblingElement())
 	{
 		// Ensure element is a <light>
 		if (strcmp(lightElement->Value(), "light") != STRCMP_SUCCESS)
@@ -203,12 +204,12 @@ void SceneParser::ReadLightsElement(const TiXmlElement* pLightsElement, std::sha
 /// <summary>
 /// Parse the <models> node
 /// </summary>
-void SceneParser::ReadModelsElement(const TiXmlElement* pModelElement, SceneModels& sceneModels)
+void SceneParser::ReadModelsElement(const TiXmlElement* pModelsRootElement, SceneModels& sceneModels)
 {
 	std::unordered_multimap<std::string, std::string> tempMap;
 
 	// Loop through all the elements of <models> node
-	for (const TiXmlElement* modelElement = pModelElement->FirstChildElement(); modelElement != NULL; modelElement = modelElement->NextSiblingElement())
+	for (const TiXmlElement* modelElement = pModelsRootElement->FirstChildElement(); modelElement != NULL; modelElement = modelElement->NextSiblingElement())
 	{
 		// Ensure element is a <model>
 		if (strcmp(modelElement->Value(), "model") != STRCMP_SUCCESS)
@@ -248,19 +249,14 @@ void SceneParser::CreateResourceEssentials()
 {
 	// Create missingtexture
 	TextureLoader errorTextureLoader;
-	errorTextureLoader.file = MISSING_TEXTURE_FILENAME1;
+	errorTextureLoader.file = MISSING_TEXTURE_FILE;
 	errorTextureLoader.textureType = DIFFUSE;
-	int textureErrorID = TextureManager::Get()->AddResource(&errorTextureLoader);
-	TextureManager::Get()->SetErrorResourceID(textureErrorID);
-	PRINT_RED("texture errorid is {0}", textureErrorID);
+	TextureManager::Get()->SetErrorResourceID(TextureManager::Get()->AddResource(&errorTextureLoader));
 
 	// Create missingmesh
 	MeshLoader errorMeshLoader;
-	errorMeshLoader.file = MISSING_MESH_FILENAME;
-	MeshManager::Get()->AddResource(&errorMeshLoader);
-	int meshErrorID = MeshManager::Get()->AddResource(&errorMeshLoader);
-	MeshManager::Get()->SetErrorResourceID(meshErrorID);
-	PRINT_RED("mesh errorid is {0}", meshErrorID);
+	errorMeshLoader.file = MISSING_MESH_FILE;
+	MeshManager::Get()->SetErrorResourceID(MeshManager::Get()->AddResource(&errorMeshLoader));
 
 	// Create essential shaders
 	ShaderLoader lightShader;
