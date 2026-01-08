@@ -77,7 +77,7 @@ namespace Curve3D
 	/// </summary>
 	bool Program::Initialise(const std::string& text)
 	{
-		// Initialize all systems used by application
+		// Initialize all systems used by Curve3D
 		Log::Init();
 
 		TheOpenGLRenderer::Get()->Init();
@@ -86,7 +86,7 @@ namespace Curve3D
 
 		InputHandler::Get()->Init();
 
-		m_UI = new UI(false, &m_loadedScene);
+		m_UI = new UI(true, &m_loadedScene);
 
 		if (!SetScene(text))
 			return false;

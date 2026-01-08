@@ -26,8 +26,6 @@ public:
 
 private:
 
-	void								UpdateSceneLight();
-
 	std::string							m_sceneFilename;
 
 	std::shared_ptr<SceneCamera>		m_sceneCamera;
