@@ -30,12 +30,12 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(LauncherForm));
             LaunchButton = new Button();
-            SceneSelectListBox = new ListBox();
-            label1 = new Label();
-            label2 = new Label();
+            SelectSceneListBox = new ListBox();
+            TEXT_Curve3D = new Label();
+            TEXT_SelectScene = new Label();
             GitHub = new LinkLabel();
             YouTube = new LinkLabel();
-            label3 = new Label();
+            TEXT_byJamGrif = new Label();
             SuspendLayout();
             // 
             // LaunchButton
@@ -47,39 +47,39 @@
             LaunchButton.Size = new Size(175, 95);
             LaunchButton.TabIndex = 0;
             LaunchButton.TabStop = false;
-            LaunchButton.Text = "Launch Demo";
+            LaunchButton.Text = "Launch";
             LaunchButton.UseVisualStyleBackColor = true;
             LaunchButton.Click += LaunchButton_Click;
             // 
-            // SceneSelectListBox
+            // SelectSceneListBox
             // 
-            SceneSelectListBox.FormattingEnabled = true;
-            SceneSelectListBox.Location = new Point(143, 148);
-            SceneSelectListBox.Margin = new Padding(3, 4, 3, 4);
-            SceneSelectListBox.Name = "SceneSelectListBox";
-            SceneSelectListBox.Size = new Size(174, 244);
-            SceneSelectListBox.TabIndex = 1;
-            SceneSelectListBox.SelectedIndexChanged += SceneSelectListBox_SelectedIndexChanged;
+            SelectSceneListBox.FormattingEnabled = true;
+            SelectSceneListBox.Location = new Point(143, 148);
+            SelectSceneListBox.Margin = new Padding(3, 4, 3, 4);
+            SelectSceneListBox.Name = "SelectSceneListBox";
+            SelectSceneListBox.Size = new Size(174, 244);
+            SelectSceneListBox.TabIndex = 1;
+            SelectSceneListBox.SelectedIndexChanged += SceneSelectListBox_SelectedIndexChanged;
             // 
-            // label1
+            // TEXT_Curve3D
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 21.75F, FontStyle.Bold);
-            label1.Location = new Point(155, 11);
-            label1.Name = "label1";
-            label1.Size = new Size(171, 50);
-            label1.TabIndex = 3;
-            label1.Text = "Curve3D";
+            TEXT_Curve3D.AutoSize = true;
+            TEXT_Curve3D.Font = new Font("Segoe UI", 21.75F, FontStyle.Bold);
+            TEXT_Curve3D.Location = new Point(155, 11);
+            TEXT_Curve3D.Name = "TEXT_Curve3D";
+            TEXT_Curve3D.Size = new Size(171, 50);
+            TEXT_Curve3D.TabIndex = 3;
+            TEXT_Curve3D.Text = "Curve3D";
             // 
-            // label2
+            // TEXT_SelectScene
             // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
-            label2.Location = new Point(142, 112);
-            label2.Name = "label2";
-            label2.Size = new Size(191, 25);
-            label2.TabIndex = 4;
-            label2.Text = "Select scene to load:";
+            TEXT_SelectScene.AutoSize = true;
+            TEXT_SelectScene.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold);
+            TEXT_SelectScene.Location = new Point(167, 121);
+            TEXT_SelectScene.Name = "TEXT_SelectScene";
+            TEXT_SelectScene.Size = new Size(126, 25);
+            TEXT_SelectScene.TabIndex = 4;
+            TEXT_SelectScene.Text = "Select Scene:";
             // 
             // GitHub
             // 
@@ -87,10 +87,10 @@
             GitHub.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             GitHub.Location = new Point(91, 509);
             GitHub.Name = "GitHub";
-            GitHub.Size = new Size(115, 28);
+            GitHub.Size = new Size(79, 28);
             GitHub.TabIndex = 5;
             GitHub.TabStop = true;
-            GitHub.Text = "My GitHub";
+            GitHub.Text = "GitHub";
             GitHub.LinkClicked += GitHub_LinkClicked;
             // 
             // YouTube
@@ -99,33 +99,33 @@
             YouTube.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
             YouTube.Location = new Point(254, 509);
             YouTube.Name = "YouTube";
-            YouTube.Size = new Size(128, 28);
+            YouTube.Size = new Size(92, 28);
             YouTube.TabIndex = 6;
             YouTube.TabStop = true;
-            YouTube.Text = "My YouTube";
+            YouTube.Text = "YouTube";
             YouTube.LinkClicked += YouTube_LinkClicked;
             // 
-            // label3
+            // TEXT_byJamGrif
             // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
-            label3.Location = new Point(169, 60);
-            label3.Name = "label3";
-            label3.Size = new Size(138, 32);
-            label3.TabIndex = 7;
-            label3.Text = "by JamGrif";
+            TEXT_byJamGrif.AutoSize = true;
+            TEXT_byJamGrif.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold);
+            TEXT_byJamGrif.Location = new Point(169, 60);
+            TEXT_byJamGrif.Name = "TEXT_byJamGrif";
+            TEXT_byJamGrif.Size = new Size(138, 32);
+            TEXT_byJamGrif.TabIndex = 7;
+            TEXT_byJamGrif.Text = "by JamGrif";
             // 
             // LauncherForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(496, 548);
-            Controls.Add(label3);
+            Controls.Add(TEXT_byJamGrif);
             Controls.Add(YouTube);
             Controls.Add(GitHub);
-            Controls.Add(label2);
-            Controls.Add(label1);
-            Controls.Add(SceneSelectListBox);
+            Controls.Add(TEXT_SelectScene);
+            Controls.Add(TEXT_Curve3D);
+            Controls.Add(SelectSceneListBox);
             Controls.Add(LaunchButton);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -134,6 +134,7 @@
             Name = "LauncherForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Curve3D Launcher";
+            FormClosing += LauncherForm_FormClosing;
             Load += LauncherForm_Load;
             ResumeLayout(false);
             PerformLayout();
@@ -142,11 +143,11 @@
         #endregion
 
         private Button LaunchButton;
-        private ListBox SceneSelectListBox;
-        private Label label1;
-        private Label label2;
+        private ListBox SelectSceneListBox;
+        private Label TEXT_Curve3D;
+        private Label TEXT_SelectScene;
         private LinkLabel GitHub;
         private LinkLabel YouTube;
-        private Label label3;
+        private Label TEXT_byJamGrif;
     }
 }

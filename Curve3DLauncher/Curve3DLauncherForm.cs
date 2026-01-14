@@ -1,26 +1,33 @@
-﻿using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.IO;
-using System.Windows.Forms;
-using System.Reflection;
+﻿using System.Diagnostics;
 
 namespace Launcher
 {
     public partial class LauncherForm : Form
     {
-        // List of all selectable Scene files the user can select
-        private List<string> SceneNameList = new List<string>();
+        private const int NO_SCENE_SELECTED = -1;
+        private const string PROCESS_NAME = "Curve3D";
 
-        // Which scene name the user has selected in the ListBox
-        private string SceneNameListSelected = string.Empty;
+        // All selectable scenes 
+        private List<string> AllScenesList = new List<string>();
+
+        // Scene selected in ListBox
+        private string SelectedScene = string.Empty;
+
+        private Process Curve3DProcess = null;
 
         public LauncherForm()
         {
             InitializeComponent();
         }
 
-        // Invoked when the form is loaded
+        private void LauncherForm_FormClosing(object sender, EventArgs e)
+        {
+            // Close Curve3D
+            Process[] processList = Process.GetProcessesByName(PROCESS_NAME);
+            if (processList.Length > 0)
+                Curve3DProcess.CloseMainWindow();
+        }
+
         private void LauncherForm_Load(object sender, EventArgs e)
         {
             // Only used when developing on own machine, ignored if ran from another users machine
@@ -31,62 +38,52 @@ namespace Launcher
                 BatchfileProcess.WaitForExit();
             }
 
-            string SceneResourcePath = @"res\scenes";
-
-            // Get the filename of all loadable scene files
-            string[] AllSceneFiles = System.IO.Directory.GetFiles(SceneResourcePath, "*.xml");
+            // Get all loadable scenes
+            string[] AllSceneFiles = System.IO.Directory.GetFiles(@"res\scenes", "*.xml");
             foreach (string file in AllSceneFiles)
-            {
-                // Only store name of each scene file
-                SceneNameList.Add(Path.GetFileNameWithoutExtension(file));
-            }
+                AllScenesList.Add(Path.GetFileNameWithoutExtension(file));
 
             // Stops first item in ListBox from being selected by default
-            SceneSelectListBox.SelectedIndex = -1;
-            SceneSelectListBox.DataSource = SceneNameList;
-
-            //LaunchButton.Enabled = false;
+            SelectSceneListBox.SelectedIndex = NO_SCENE_SELECTED;
+            SelectSceneListBox.DataSource = AllScenesList;
         }
 
-        // Launch button - Start the Demo.exe process
+        // Launch button - Start the Curve3D.exe process
         private void LaunchButton_Click(object sender, EventArgs e)
         {
-            // Ensure a scene has been selected
-            if (SceneNameListSelected == string.Empty)
+            if (SelectedScene == string.Empty)
                 return;
 
-            StartProcess(SceneNameListSelected);
+            StartProcess(SelectedScene);
         }
 
-        // ListBox - Store what scene name user has pressed and update picture as appropriate
+        // ListBox - Store selected scene
         private void SceneSelectListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Ensure valid index
-            if (SceneSelectListBox.SelectedIndex == -1)
+            if (SelectSceneListBox.SelectedIndex == NO_SCENE_SELECTED)
                 return;
 
-            // Update index selection
-            SceneNameListSelected = SceneNameList[SceneSelectListBox.SelectedIndex];
-
-            LaunchButton.Enabled = true;
+            SelectedScene = AllScenesList[SelectSceneListBox.SelectedIndex];
         }
 
         // Start Curve3D.exe with the startSceneName scene
         private void StartProcess(string startSceneName)
         {
-            Process? demoProcess = Process.Start(new ProcessStartInfo()
+            // Ensure Curve3D is not already running
+            Process[] processList = Process.GetProcessesByName(PROCESS_NAME);
+            if (processList.Length > 0)
             {
-                FileName = "Curve3D.exe",
+                MessageBox.Show("An instance of Curve3D is already running!", "Curve3D Launcher", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Curve3DProcess = Process.Start(new ProcessStartInfo()
+            {
+                FileName = PROCESS_NAME,
                 RedirectStandardOutput = false, // Coloured text in Curve3D console
                 UseShellExecute = true,
                 ArgumentList = { startSceneName },
             });
-
-            if (demoProcess != null)
-            {
-                Console.WriteLine($"Process Name: {demoProcess.ProcessName}");
-                Console.WriteLine($"Starting Scene: {startSceneName}");
-            }
         }
 
         private void GitHub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

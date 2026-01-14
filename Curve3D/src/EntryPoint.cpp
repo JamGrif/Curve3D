@@ -22,7 +22,7 @@ int wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LP
 	
 	if (processArgument.empty())
 	{
-		MessageBoxA(NULL, "Curve3D must be started from Curve3DLauncher!", "ERROR :(", MB_OK | MB_ICONASTERISK);
+		MessageBoxW(NULL, L"Curve3D must be started from Curve3DLauncher!", L"ERROR :(", MB_OK | MB_ICONASTERISK);
 		return 1;
 	}
 
