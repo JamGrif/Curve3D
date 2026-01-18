@@ -4,16 +4,9 @@
 
 #include "Core/Engine.h"
 
-// Keep console open after program end (debug mode)
-#ifdef _DEBUG
-	#define KeepConsoleOpen() while (true) {}
-#else
-	#define KeepConsoleOpen() 
-#endif
-
 int wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR pCmdLine, _In_ int nCmdShow)
 {
-	// Convert PWSTR argument list into std::string
+	// Convert LPWSTR argument list into std::string
 	std::wstring wideString = pCmdLine;
 	std::string processArgument;
 	processArgument.resize(wideString.length());
@@ -29,7 +22,5 @@ int wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LP
 	Curve3D::SetInitalParameters(processArgument);
 	Curve3D::StartCurve3D();
 	
-	//KeepConsoleOpen();
-
 	return 0;
 }

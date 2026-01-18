@@ -7,23 +7,6 @@
 #include "Rendering/OpenGLWindow.h"
 #include "Rendering/OpenGLRenderer.h"
 
-static constexpr int CONSOLE_STARTING_X = -900;
-static constexpr int CONSOLE_STARTING_Y = 525;
-
-static constexpr int CONSOLE_WIDTH = 900;
-static constexpr int CONSOLE_HEIGHT = 500;
-
-// Enable console if debug mode
-#ifdef _DEBUG
-	#include <windows.h>
-	#define StartConsole()																								\
-		AllocConsole();																									\
-		freopen_s((FILE**)stdout, "CONOUT$", "w", stdout);																\
-		MoveWindow(GetConsoleWindow(), CONSOLE_STARTING_X, CONSOLE_STARTING_Y, CONSOLE_WIDTH, CONSOLE_HEIGHT, TRUE);
-#else
-	#define StartConsole()
-#endif
-
 namespace Curve3D
 {
 	static bool ENGINE_STARTED = false;
@@ -42,8 +25,6 @@ namespace Curve3D
 			return;
 
 		ENGINE_STARTED = true;
-
-		StartConsole();
 
 		Program* em = new Program();
 
