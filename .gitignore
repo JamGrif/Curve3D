@@ -65,5 +65,5 @@ ipch/
 *.VC.db
 *.VC.VC.opendb
 
-# Custom ignore
+# Custom solution ignore
 internal
