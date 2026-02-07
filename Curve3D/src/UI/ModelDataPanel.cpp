@@ -16,9 +16,6 @@ static const std::string EMPTY_TEXTURE_ID = "";
 /// </summary>
 struct SelectedModelCache
 {
-	//SelectedModelCache() { PRINT_INFO("cache created"); }
-	//~SelectedModelCache() { PRINT_INFO("cache destroyed"); }
-
 	Vector3D position;
 	Vector3D rotation;
 	Vector3D scale;
