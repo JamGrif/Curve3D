@@ -38,7 +38,7 @@ This project serves as a personal experiment, with the aim of further developing
 
 <img src="media/banner1.jpg">
 
-## **Curve3D uses the following dependencies:**
+## **Curve3D has the following dependencies:**
 
 [assimp](https://github.com/assimp/assimp)
 
