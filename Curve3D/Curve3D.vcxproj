@@ -201,6 +201,7 @@ xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-m
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\UI\DebugPanel.cpp" />
     <ClCompile Include="src\EntryPoint.cpp" />
     <ClCompile Include="src\UI\ModelDataPanel.cpp" />
     <ClCompile Include="src\UI\ControlPanel.cpp" />
@@ -286,6 +287,7 @@ xcopy /y /d $(SolutionDir)Curve3D\dependencies\assimp\lib\release\assimp-vc143-m
     <ClCompile Include="src\Core\Vector3D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Curve3D\UI\DebugPanel.h" />
     <ClInclude Include="include\Curve3D\Core\Common.h" />
     <ClInclude Include="include\Curve3D\Core\Engine.h" />
     <ClInclude Include="include\Curve3D\Core\Clock.h" />

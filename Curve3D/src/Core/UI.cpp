@@ -14,6 +14,7 @@
 #include "UI/PerformancePanel.h"
 #include "UI/SceneModelsPanel.h"
 #include "UI/ModelDataPanel.h"
+#include "UI/DebugPanel.h"
 
 // Flags for each ImGui window used
 static constexpr ImGuiWindowFlags COMMON_RESIZE_FLAGS = ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse;
@@ -50,6 +51,7 @@ UI::UI(bool bVisible, Scene** pScenePointer)
 	m_allPanels.emplace_back(std::make_shared<OptionsPanel>("Scene Options", COMMON_FLAGS, true, pScenePointer));
 	m_allPanels.emplace_back(std::make_shared<SceneModelsPanel>("Scene Models", COMMON_FLAGS, true, pScenePointer));
 	m_allPanels.emplace_back(std::make_shared<ModelDataPanel>("Model Data", COMMON_FLAGS, false, pScenePointer, std::dynamic_pointer_cast<SceneModelsPanel>(m_allPanels.back())));
+	m_allPanels.emplace_back(std::make_shared<DebugPanel>("Debug", COMMON_FLAGS, true, pScenePointer));
 }
 
 UI::~UI()
